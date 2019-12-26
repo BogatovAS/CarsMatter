@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimaryDark">#000a12</color>
+    <color name="colorPrimaryLight">#636A72</color>
+
+    <color name="colorSecondary">#212121</color>
+    <color name="colorSecondaryDark">#1b0000</color>
+    <color name="colorSecondaryLight">#484848</color>
+
+    <color name="white">#ffffff</color>
+
+    <drawable name="transparent_color">#00000000</drawable>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/journal_tab_layout"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="40dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextColor="@color/colorPrimaryLight"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white">
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/journal_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+<!--        <androidx.viewpager.widget.PagerTabStrip-->
+<!--            android:id="@+id/journal_view_pager_header"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            style="@style/TabBar"-->
+<!--            android:background="@color/colorPrimaryDark"-->
+<!--            android:layout_gravity="top"/>-->
+    </androidx.viewpager.widget.ViewPager>
+</LinearLayout>

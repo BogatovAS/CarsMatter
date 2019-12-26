@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Автомобильное дело</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Автомобильное дело</string>
+    <string name="nav_header_subtitle">https://carsmatter.azurewebsites.net</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_refill">Заправка</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_search_auto">Поиск</string>
+    <string name="menu_favorites">Избранное</string>
+    <string name="menu_journal">Бортжурнал</string>
+    <string name="menu_recognize">Распознать</string>
+    <string name="menu_top_auto">Топ 10</string>
+    <string name="nav_consumables">Замены</string>
+
+    <string name="api_base_path">https://carsmatter.azurewebsites.net</string>
+</resources>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsMatter", "CarsMatter\CarsMatter.csproj", "{1857218C-CA98-44AC-A677-63AFE6264C39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsMatter.Infrastructure", "CarsMatter.Infrastructure\CarsMatter.Infrastructure.csproj", "{F5C20229-C5A3-4677-897A-5AF6F64E6027}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1857218C-CA98-44AC-A677-63AFE6264C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1857218C-CA98-44AC-A677-63AFE6264C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1857218C-CA98-44AC-A677-63AFE6264C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1857218C-CA98-44AC-A677-63AFE6264C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C7C8B3C-823E-4C58-908B-2CF5C1DAF335}
+	EndGlobalSection
+EndGlobal

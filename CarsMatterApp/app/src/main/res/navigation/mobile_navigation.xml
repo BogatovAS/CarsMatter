@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_search_auto">
+
+    <fragment
+        android:id="@+id/nav_search_auto"
+        android:name="com.andrey.carsmatter.ui.search_car.SearchCarFragment"
+        android:label="@string/menu_search_auto"
+        tools:layout="@layout/fragment_search_auto" />
+
+    <fragment
+        android:id="@+id/nav_favorites"
+        android:name="com.andrey.carsmatter.ui.favorites.FavoritesFragment"
+        android:label="@string/menu_favorites"
+        tools:layout="@layout/fragment_favorites" />
+
+    <fragment
+        android:id="@+id/nav_journal"
+        android:name="com.andrey.carsmatter.ui.journal.JournalFragment"
+        android:label="@string/menu_journal"
+        tools:layout="@layout/fragment_journal" />
+
+    <fragment
+        android:id="@+id/nav_recognize"
+        android:name="com.andrey.carsmatter.ui.recognize.RecognizeFragment"
+        android:label="@string/menu_recognize"
+        tools:layout="@layout/fragment_recognize" />
+
+    <fragment
+        android:id="@+id/nav_top_auto"
+        android:name="com.andrey.carsmatter.ui.top_auto.TopAutoFragment"
+        android:label="@string/menu_top_auto"
+        tools:layout="@layout/fragment_top_auto" />
+
+    <fragment
+        android:id="@+id/nav_refill_change"
+        android:name="com.andrey.carsmatter.ui.journal.tabs.Refill.RefillNoteChangeFragment"
+        android:label="@string/nav_refill"
+        tools:layout="@layout/fragment_change_refill_note" />
+
+    <fragment
+        android:id="@+id/nav_consumables_change"
+        android:name="com.andrey.carsmatter.ui.journal.tabs.Consumables.ConsumablesNoteChangeFragment"
+        android:label="@string/nav_consumables"
+        tools:layout="@layout/fragment_change_consumables_note" />
+</navigation>
