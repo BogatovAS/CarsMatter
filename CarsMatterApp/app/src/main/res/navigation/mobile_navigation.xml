@@ -38,12 +38,18 @@
     <fragment
         android:id="@+id/nav_refill_change"
         android:name="com.andrey.carsmatter.ui.journal.tabs.Refill.RefillNoteChangeFragment"
-        android:label="@string/nav_refill"
+        android:label="@string/menu_refill"
         tools:layout="@layout/fragment_change_refill_note" />
 
     <fragment
         android:id="@+id/nav_consumables_change"
         android:name="com.andrey.carsmatter.ui.journal.tabs.Consumables.ConsumablesNoteChangeFragment"
-        android:label="@string/nav_consumables"
+        android:label="@string/menu_consumables"
         tools:layout="@layout/fragment_change_consumables_note" />
+
+    <fragment
+        android:id="@+id/nav_brand_models"
+        android:name="com.andrey.carsmatter.ui.search_car.BrandModelsFragment"
+        android:label="@string/menu_brand_models"
+        tools:layout="@layout/fragment_brand_models" />
 </navigation>

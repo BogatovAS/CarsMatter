@@ -32,7 +32,7 @@ public class ConsumablesTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.carsRepository = new CarsRepository();
+        this.carsRepository = new CarsRepository(getContext());
     }
 
     @Override

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CarsMatter.Infrastructure\CarsMatter.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- Copy the app.yaml on publish -->
+  <ItemGroup>
+    <None Include="app.yaml" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

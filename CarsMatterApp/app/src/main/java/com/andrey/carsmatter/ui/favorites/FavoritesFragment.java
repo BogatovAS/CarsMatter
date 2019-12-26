@@ -23,13 +23,6 @@ public class FavoritesFragment extends Fragment {
         galleryViewModel =
                 ViewModelProviders.of(this).get(FavoritesViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search_auto, container, false);
-        final TextView textView = root.findViewById(R.id.text_search_auto);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 }
