@@ -42,6 +42,18 @@ public class RefillNotesAdapter extends BaseAdapter {
         this.refillNotes.remove(refillNote);
     }
 
+    public void clear() {
+        this.refillNotes.clear();
+    }
+
+    public void add(RefillNote refillNote) {
+        this.refillNotes.add(refillNote);
+    }
+
+    public void addRange(ArrayList<RefillNote> notes) {
+        this.refillNotes.addAll(notes);
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         if (view == null) {

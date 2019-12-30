@@ -57,9 +57,9 @@ namespace CarsMatter.Infrastructure.Helpers
             return brands;
         }
 
-        public static async Task<List<Model>> ParseCarsForModel(string htmlDocument)
+        public static async Task<List<Car>> ParseCarsForModel(string htmlDocument)
         {
-            List<Model> cars = new List<Model>();
+            List<Car> cars = new List<Car>();
 
             IHtmlDocument document = await parser.ParseDocumentAsync(htmlDocument);
 
@@ -75,29 +75,24 @@ namespace CarsMatter.Infrastructure.Helpers
 
                     List<IHtmlParagraphElement> characteristicsElement = carElement.QuerySelectorAll<IHtmlParagraphElement>("p").ToList();
 
-                    List<string> prices = new List<string>();
+                    List<string> prices = new List<string> { "0", "0" };
                     if (characteristicsElement.Count > 2)
                     {
-                        string pricesString = Regex.Replace(characteristicsElement[2].TextContent, @"\s+", string.Empty);
-                        prices = Regex.Matches(pricesString, @"\d+").Cast<Match>().Select(x => x.Value).ToList();
-                    }
-                    if (prices.Count == 1)
-                    {
-                        prices.Add(prices[0]);
-                    }
-                    if (prices.Count == 0)
-                    {
-                        prices.Add("0");
-                        prices.Add("0");
+                        prices = ParsePrices(characteristicsElement[2].TextContent);
                     }
 
-                    Model model = new Model
+                    List<string> dates = ParseManufactureDates(characteristicsElement[1].TextContent);
+
+                    Car model = new Car
                     {
                         ModelName = characteristicsElement[0].TextContent,
                         HttpPath = carElement.QuerySelector<IHtmlAnchorElement>("a").PathName,
                         LowPrice = decimal.Parse(prices[0]),
                         HighPrice = decimal.Parse(prices[1]),
+                        ManufactureStartDate = dates[0],
+                        ManufactureEndDate = dates[1],
                         CarImagePath = carElement.QuerySelector<IHtmlImageElement>("img").Source.Remove(0, 8),
+                        AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={characteristicsElement[0].TextContent}",
                         BodyType = currentBodyType,
                     };
 
@@ -107,42 +102,37 @@ namespace CarsMatter.Infrastructure.Helpers
             return cars;
         }
 
-        public static async Task<List<Car>> ParseCarsModificationsForModel(string htmlDocument)
+        private static List<string> ParsePrices(string prices)
         {
-            List<Car> carsInfo = new List<Car>();
+            List<string> pricesList = new List<string>();
 
-            IHtmlDocument document = await parser.ParseDocumentAsync(htmlDocument);
+            string pricesString = Regex.Replace(prices, @"\s+", string.Empty);
+            pricesList = Regex.Matches(pricesString, @"\d+").Cast<Match>().Select(x => x.Value).ToList();
 
-            IHtmlUnorderedListElement modificationsList = (IHtmlUnorderedListElement)document.GetElementById("mod-list");
-
-            foreach (IHtmlListItemElement modificationElement in modificationsList.QuerySelectorAll("li"))
+            if (pricesList.Count == 1)
             {
-                List<IHtmlDivElement> modificationCharacteristics = modificationElement.QuerySelectorAll<IHtmlDivElement>("div").ToList();
+                pricesList.Add(pricesList[0]);
+            }
+            if (pricesList.Count == 0)
+            {
+                pricesList.AddRange(new[] { "0", "0" });
+            }
+            return pricesList;
+        }
 
-                List<string> dates = Regex.Matches(modificationCharacteristics[4].TextContent, @"\d{4}").Cast<Match>().Select(x => x.Value).ToList();
-                if (dates.Count == 1)
-                {
-                    dates.Add("в производстве");
-                }
-                if (dates.Count == 0)
-                {
-                    dates.Add("-");
-                    dates.Add("-");
-                }
-
-                Car car = new Car
-                {
-                    Name = modificationElement.QuerySelector<IHtmlAnchorElement>("a").TextContent,
-                    AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={modificationElement.QuerySelector<IHtmlAnchorElement>("a").TextContent}",
-                    Transmission = modificationCharacteristics[3].TextContent,
-                    ManufactureStartDate = dates[0],
-                    ManufactureEndDate = dates[1],
-                };
-
-                carsInfo.Add(car);
+        private static List<string> ParseManufactureDates(string datesString)
+        {
+            List<string> dates = Regex.Matches(datesString, @"\d{4}").Cast<Match>().Select(x => x.Value).ToList();
+            if (dates.Count == 1)
+            {
+                dates.Add("в производстве");
+            }
+            if (dates.Count == 0)
+            {
+                dates.AddRange(new[] { "-", "-" });
             }
 
-            return carsInfo;
+            return dates;
         }
     }
 }

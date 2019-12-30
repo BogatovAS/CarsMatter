@@ -1,6 +1,7 @@
 package com.andrey.carsmatter.ui.journal.tabs.Refill;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,16 +14,21 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.andrey.carsmatter.R;
 import com.andrey.carsmatter.models.RefillNote;
+import com.andrey.carsmatter.services.CarsRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class RefillNoteChangeFragment extends Fragment {
 
+    private RefillNote currentRefillNote;
     private Calendar calendar;
     private EditText dateView;
     private EditText timeView;
@@ -31,6 +37,20 @@ public class RefillNoteChangeFragment extends Fragment {
     private EditText petrolEditText;
     private EditText odoEditText;
     private EditText locationEditText;
+
+    private CarsRepository carsRepository;
+
+    private Dialog dialog;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.carsRepository = new CarsRepository(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(R.layout.progress_bar_dialog);
+        this.dialog = builder.create();
+    }
 
     @Nullable
     @Override
@@ -45,36 +65,69 @@ public class RefillNoteChangeFragment extends Fragment {
         this.odoEditText = view.findViewById(R.id.refill_odo_edit);
         this.locationEditText = view.findViewById(R.id.refill_location_edit);
 
-        RefillNote currentRefillNote;
         try {
-            currentRefillNote = new RefillNote();
-            currentRefillNote.Location = getArguments().getString("location");
-            currentRefillNote.Petrol = getArguments().getFloat("petrol");
-            currentRefillNote.Odo = getArguments().getLong("odo");
-            currentRefillNote.Price = getArguments().getFloat("price");
-            currentRefillNote.Date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(getArguments().getString("date"));
+            this.currentRefillNote = new RefillNote();
+            this.currentRefillNote.Id = getArguments().getInt("id");
+            this.currentRefillNote.Location = getArguments().getString("location");
+            this.currentRefillNote.Petrol = getArguments().getFloat("petrol");
+            this.currentRefillNote.Odo = getArguments().getInt("odo");
+            this.currentRefillNote.Price = getArguments().getFloat("price");
+            this.currentRefillNote.Date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(getArguments().getString("date"));
         }catch (Exception e){
-            currentRefillNote = null;
+            this.currentRefillNote = null;
         }
 
         this.calendar = Calendar.getInstance();
+        dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
+        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
 
-        if(currentRefillNote != null) {
-            calendar.setTime(currentRefillNote.Date);
+        if(this.currentRefillNote != null) {
+            calendar.setTime(this.currentRefillNote.Date);
 
-            dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(currentRefillNote.Date));
-            timeView.setText(new SimpleDateFormat("HH:mm").format(currentRefillNote.Date));
-            locationEditText.setText(currentRefillNote.Location);
-            petrolEditText.setText(Float.toString(currentRefillNote.Petrol));
-            odoEditText.setText(Long.toString(currentRefillNote.Odo));
-            refillPriceSummary.setText(Float.toString(currentRefillNote.Price));
-            refillPricePerLiter.setText(Float.toString(currentRefillNote.Price / currentRefillNote.Petrol));
+            dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(this.currentRefillNote.Date));
+            timeView.setText(new SimpleDateFormat("HH:mm").format(this.currentRefillNote.Date));
+            locationEditText.setText(this.currentRefillNote.Location);
+            petrolEditText.setText(Float.toString(this.currentRefillNote.Petrol));
+            odoEditText.setText(Long.toString(this.currentRefillNote.Odo));
+            refillPriceSummary.setText(Float.toString(this.currentRefillNote.Price));
+            refillPricePerLiter.setText(Float.toString(this.currentRefillNote.Price / this.currentRefillNote.Petrol));
         }
         Button applyRefillChangeButton = view.findViewById(R.id.apply_refill_change_button);
 
         applyRefillChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final boolean isNewNote = currentRefillNote == null;
+
+                if(isNewNote){
+                    currentRefillNote = new RefillNote();
+                }
+
+                currentRefillNote.Location = locationEditText.getText().toString();
+                currentRefillNote.Petrol = Float.parseFloat(petrolEditText.getText().toString());
+                currentRefillNote.Odo = Integer.parseInt(odoEditText.getText().toString());
+                currentRefillNote.Price = Float.parseFloat(refillPriceSummary.getText().toString());
+                currentRefillNote.Date = calendar.getTime();
+
+                dialog.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isNewNote) {
+                            carsRepository.AddRefillNote(currentRefillNote);
+                        } else {
+                            carsRepository.UpdateRefillNote(currentRefillNote);
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                                navController.navigate(R.id.nav_journal);
+                            }});
+                    }
+                }).start();
+
             }
         });
 

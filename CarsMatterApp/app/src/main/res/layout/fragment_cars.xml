@@ -7,9 +7,9 @@
 
     <ListView
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/search_auto_list_view"
+        android:id="@+id/cars_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.search_car.SearchCarFragment">
+        tools:context=".ui.search_car.CarsFragment">
     </ListView>
 </LinearLayout>

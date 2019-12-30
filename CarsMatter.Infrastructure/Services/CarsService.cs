@@ -78,9 +78,9 @@ namespace CarsMatter.Infrastructure.Services
             return brandModels;
         }
 
-        public async Task<List<Model>> GetAllCarsForModel(string carModelHttpPath)
+        public async Task<List<Car>> GetAllCarsForModel(string carModelHttpPath)
         {
-            List<Model> cars = new List<Model>();
+            List<Car> cars = new List<Car>();
             if (this.memoryCache.TryGetValue($"car.model.{carModelHttpPath}.cars", out cars))
             {
                 return cars;
@@ -92,6 +92,12 @@ namespace CarsMatter.Infrastructure.Services
             try
             {
                 cars = await CarsHtmlParser.ParseCarsForModel(htmlDocument);
+
+                for(int i=0; i < cars.Count; i++)
+                {
+                    cars[i].Base64CarImage = await GetImageForModel(cars[i].CarImagePath);
+                }
+
                 this.memoryCache.Set($"car.model.{carModelHttpPath}.cars", cars, this.memoryCacheEntryOptions);
             }
             catch (Exception e)
@@ -102,31 +108,7 @@ namespace CarsMatter.Infrastructure.Services
             return cars;
         }
 
-        public async Task<List<Car>> GetAllCarsModificationsForModel(string carModificationHttpPath)
-        {
-            List<Car> cars = new List<Car>();
-            if (this.memoryCache.TryGetValue($"car.modification.{carModificationHttpPath}.cars", out cars))
-            {
-                return cars;
-            }
-
-            HttpResponseMessage response = await httpClient.GetAsync(carModificationHttpPath);
-            string htmlDocument = await response.Content.ReadAsStringAsync();
-
-            try
-            {
-                cars = await CarsHtmlParser.ParseCarsModificationsForModel(htmlDocument);
-                this.memoryCache.Set($"car.modification.{carModificationHttpPath}.cars", cars, this.memoryCacheEntryOptions);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError(e, $"An error occured while trying to parse cars modification with http path: {carModificationHttpPath}. Message: {e.Message}");
-            }
-
-            return cars;
-        }
-
-        public async Task<string> GetImageForModel(string modelImageHttpPath)
+        private async Task<string> GetImageForModel(string modelImageHttpPath)
         {
             HttpResponseMessage carImageResponse = await httpClient.GetAsync(modelImageHttpPath);
             string carImageBase64 = Convert.ToBase64String(await carImageResponse.Content.ReadAsByteArrayAsync());

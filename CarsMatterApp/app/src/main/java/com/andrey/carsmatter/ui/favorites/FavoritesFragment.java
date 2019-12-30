@@ -16,13 +16,8 @@ import com.andrey.carsmatter.R;
 
 public class FavoritesFragment extends Fragment {
 
-    private FavoritesViewModel galleryViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(FavoritesViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_search_auto, container, false);
-        return root;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search_auto, container, false);
+        return view;
     }
 }

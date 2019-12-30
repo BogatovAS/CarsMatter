@@ -10,10 +10,6 @@ namespace CarsMatter.Infrastructure.Interfaces
 
         Task<List<BrandModel>> GetAllBrandModels(string brandHttpPath);
 
-        Task<List<Model>> GetAllCarsForModel(string carModelHttpPath);
-
-        Task<List<Car>> GetAllCarsModificationsForModel(string carModificationHttpPath);
-
-        Task<string> GetImageForModel(string modelImageHttpPath);
+        Task<List<Car>> GetAllCarsForModel(string carModelHttpPath);
     }
 }

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.andrey.carsmatter.R;
 import com.andrey.carsmatter.models.ConsumablesNote;
-import com.andrey.carsmatter.models.RefillNote;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +40,18 @@ public class ConsumablesNotesAdapter extends BaseAdapter {
 
     public void remove(ConsumablesNote consumablesNote){
         this.consumablesNotes.remove(consumablesNote);
+    }
+
+    public void clear() {
+        this.consumablesNotes.clear();
+    }
+
+    public void add(ConsumablesNote consumablesNote) {
+        this.consumablesNotes.add(consumablesNote);
+    }
+
+    public void addRange(ArrayList<ConsumablesNote> notes) {
+        this.consumablesNotes.addAll(notes);
     }
 
     @Override

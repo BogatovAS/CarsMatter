@@ -76,6 +76,7 @@
                     android:id="@+id/refill_location_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:inputType="textShortMessage"
                     android:hint="Место"
                     android:textColor="@color/colorPrimaryDark" />
             </com.google.android.material.textfield.TextInputLayout>

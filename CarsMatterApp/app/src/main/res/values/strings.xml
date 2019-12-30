@@ -17,4 +17,5 @@
     <string name="menu_brand_models">Модели бренда</string>
 
     <string name="api_base_path">https://carfinderai.appspot.com/api</string>
+    <string name="menu_cars">Модели машин</string>
 </resources>

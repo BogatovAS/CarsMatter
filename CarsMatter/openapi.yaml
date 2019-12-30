@@ -62,46 +62,7 @@ paths:
             uniqueItems: false
             type: array
             items:
-              $ref: '#/definitions/Model'
-  /api/cars/brands/models/cars/modifications:
-    get:
-      tags:
-        - Cars
-      operationId: GetAllCarsModifications
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: carModificationsHttpPath
-          in: query
-          required: false
-          type: string
-      responses:
-        '200':
-          description: Success
-          schema:
-            uniqueItems: false
-            type: array
-            items:
-              $ref: '#/definitions/Model'
-  /api/cars/brands/models/cars/image:
-    get:
-      tags:
-        - Cars
-      operationId: GetImageForModel
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: carImagePath
-          in: query
-          required: false
-          type: string
-      responses:
-        '200':
-          description: Success
-          schema:
-            type: string
+              $ref: '#/definitions/Car'
   /api/consumables_notes:
     get:
       tags:
@@ -277,7 +238,7 @@ definitions:
         type: string
       modelName:
         type: string
-  Model:
+  Car:
     type: object
     properties:
       httpPath:
@@ -286,12 +247,20 @@ definitions:
         type: string
       carImagePath:
         type: string
+      base64CarImage:
+        type: string
       lowPrice:
         format: double
         type: number
       highPrice:
         format: double
         type: number
+      manufactureStartDate:
+        type: string
+      manufactureEndDate:
+        type: string
+      avitoUri:
+        type: string
       bodyType:
         format: int32
         enum:

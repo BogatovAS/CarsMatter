@@ -76,6 +76,7 @@
                     android:id="@+id/consumables_service_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:inputType="textShortMessage"
                     android:textColor="@color/colorPrimaryDark"
                     android:hint="Сервис"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -173,6 +174,7 @@
                     android:id="@+id/consumables_location_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:inputType="textShortMessage"
                     android:textColor="@color/colorPrimaryDark"
                     android:hint="Место"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -200,7 +202,7 @@
                     android:id="@+id/consumables_notes_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberDecimal"
+                    android:inputType="textShortMessage"
                     android:textColor="@color/colorPrimaryDark"
                     android:hint="Примечания"/>
             </com.google.android.material.textfield.TextInputLayout>

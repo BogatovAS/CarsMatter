@@ -1,6 +1,7 @@
 package com.andrey.carsmatter.ui.journal.tabs.Consumables;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,16 +14,21 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.andrey.carsmatter.R;
 import com.andrey.carsmatter.models.ConsumablesNote;
+import com.andrey.carsmatter.services.CarsRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class ConsumablesNoteChangeFragment extends Fragment {
 
+    private ConsumablesNote currentConsumablesNote = new ConsumablesNote();
     private Calendar calendar;
     private EditText dateView;
     private EditText timeView;
@@ -31,6 +37,20 @@ public class ConsumablesNoteChangeFragment extends Fragment {
     private EditText odoEditText;
     private EditText locationEditText;
     private EditText serviceEditText;
+
+    private CarsRepository carsRepository;
+
+    private Dialog dialog;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.carsRepository = new CarsRepository(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(R.layout.progress_bar_dialog);
+        this.dialog = builder.create();
+    }
 
     @Nullable
     @Override
@@ -45,12 +65,12 @@ public class ConsumablesNoteChangeFragment extends Fragment {
         this.odoEditText = view.findViewById(R.id.consumables_odo_edit);
         this.locationEditText = view.findViewById(R.id.consumables_location_edit);
 
-        ConsumablesNote currentConsumablesNote;
         try {
             currentConsumablesNote = new ConsumablesNote();
+            currentConsumablesNote.Id = getArguments().getInt("id");
             currentConsumablesNote.Date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(getArguments().getString("date"));
             currentConsumablesNote.KindOfService = getArguments().getString("service");
-            currentConsumablesNote.Odo = getArguments().getLong("odo");
+            currentConsumablesNote.Odo = getArguments().getInt("odo");
             currentConsumablesNote.Price = getArguments().getFloat("price");
             currentConsumablesNote.Location = getArguments().getString("location");
             currentConsumablesNote.Notes = getArguments().getString("notes");
@@ -59,6 +79,8 @@ public class ConsumablesNoteChangeFragment extends Fragment {
         }
 
         this.calendar = Calendar.getInstance();
+        dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
+        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
 
         if(currentConsumablesNote != null) {
             calendar.setTime(currentConsumablesNote.Date);
@@ -76,6 +98,36 @@ public class ConsumablesNoteChangeFragment extends Fragment {
         applyConsumablesChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final boolean isNewNote = currentConsumablesNote == null;
+
+                if(isNewNote){
+                    currentConsumablesNote = new ConsumablesNote();
+                }
+
+                currentConsumablesNote.Location = locationEditText.getText().toString();
+                currentConsumablesNote.KindOfService = serviceEditText.getText().toString();
+                currentConsumablesNote.Odo = Integer.parseInt(odoEditText.getText().toString());
+                currentConsumablesNote.Price = Float.parseFloat(servicePriceEditText.getText().toString());
+                currentConsumablesNote.Notes = notesEditText.getText().toString();
+                currentConsumablesNote.Date = calendar.getTime();
+
+                dialog.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isNewNote) {
+                            carsRepository.AddConsumablesNote(currentConsumablesNote);
+                        } else {
+                            carsRepository.UpdateConsumablesNote(currentConsumablesNote);
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                                navController.navigate(R.id.nav_journal);
+                            }});
+                    }}).start();
             }
         });
 

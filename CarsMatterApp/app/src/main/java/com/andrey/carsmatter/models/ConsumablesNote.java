@@ -1,25 +1,36 @@
 package com.andrey.carsmatter.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class ConsumablesNote {
+    @SerializedName("id")
+    @Expose
     public int Id;
+
+    @SerializedName("date")
+    @Expose
     public Date Date;
+
+    @SerializedName("kindOfService")
+    @Expose
     public String KindOfService;
+
+    @SerializedName("price")
+    @Expose
     public float Price;
+
+    @SerializedName("odo")
+    @Expose
     public int Odo;
+
+    @SerializedName("location")
+    @Expose
     public String Location;
+
+    @SerializedName("notes")
+    @Expose
     public String Notes;
-
-    public ConsumablesNote(Date date, String kindOfService, float price, int odo, String location, String notes) {
-        this.Date = date;
-        this.KindOfService = kindOfService;
-        this.Price = price;
-        this.Odo = odo;
-        this.Location = location;
-        this.Notes = notes;
-    }
-
-    public ConsumablesNote(){
-    }
 }

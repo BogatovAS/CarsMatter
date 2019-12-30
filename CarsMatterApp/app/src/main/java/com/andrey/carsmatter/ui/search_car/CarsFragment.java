@@ -1,32 +1,37 @@
 package com.andrey.carsmatter.ui.search_car;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.andrey.carsmatter.R;
+import com.andrey.carsmatter.adapters.CarsAdapter;
+import com.andrey.carsmatter.adapters.RefillNotesAdapter;
+import com.andrey.carsmatter.helpers.KeyboardHelper;
 import com.andrey.carsmatter.models.BrandModel;
+import com.andrey.carsmatter.models.Car;
 import com.andrey.carsmatter.services.CarsRepository;
 
 import java.util.ArrayList;
 
-public class BrandModelsFragment extends Fragment {
+public class CarsFragment extends Fragment {
 
     private CarsRepository carsRepository;
-    private ArrayList<BrandModel> brandModels;
-    ArrayAdapter<String> adapter;
+    private ArrayList<Car> cars = new ArrayList<>();
+    CarsAdapter adapter;
 
     Dialog dialog;
 
@@ -34,7 +39,7 @@ public class BrandModelsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.carsRepository = new CarsRepository(getContext());
-        this.adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
+        this.adapter = new CarsAdapter(getContext(), this.cars);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(R.layout.progress_bar_dialog);
@@ -44,16 +49,15 @@ public class BrandModelsFragment extends Fragment {
         new Thread(null, new Runnable() {
             @Override
             public void run() {
-                String brandHttpPath = getArguments().getString("brandHttpPath");
-                brandModels = carsRepository.GetModelsForBrand(brandHttpPath);
+                String brandModelHttpPath = getArguments().getString("brandModelHttpPath");
+                cars = carsRepository.GetCarsForModel(brandModelHttpPath);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.clear();
-                        for (BrandModel brandModel: brandModels) {
-                            adapter.add(brandModel.ModelName);
-                        }
+                        adapter.addRange(cars);
+                        adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }});
             }
@@ -61,23 +65,14 @@ public class BrandModelsFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_brand_models, container, false);
+        View view = inflater.inflate(R.layout.fragment_cars, container, false);
 
-        ListView brandModelsListView = view.findViewById(R.id.brand_models_list_view);
+        KeyboardHelper.hideKeyboard(getActivity());
 
-        brandModelsListView.setAdapter(adapter);
+        ListView carsListView = view.findViewById(R.id.cars_list_view);
+        carsListView.setDivider(ContextCompat.getDrawable(getActivity(), R.drawable.transparent_color));
 
-        brandModelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-
-                Bundle params = new Bundle();
-                params.putString("brandModelHttpPath", brandModels.get(i).HttpPath);
-
-                navController.navigate(R.id.nav_cars, params);
-            }
-        });
+        carsListView.setAdapter(adapter);
         return view;
     }
 }

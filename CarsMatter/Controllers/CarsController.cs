@@ -57,42 +57,12 @@
         }
 
         [HttpGet("brands/models/cars")]
-        public async Task<ActionResult<IEnumerable<Model>>> GetCarsForModel([FromQuery] string modelHttpPath)
+        public async Task<ActionResult<IEnumerable<Car>>> GetCarsForModel([FromQuery] string modelHttpPath)
         {
             try
             {
-                List<Model> brandCars = await this.carsService.GetAllCarsForModel(modelHttpPath);
-                return Ok(brandCars);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError(e, e.Message);
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpGet("brands/models/cars/modifications")]
-        public async Task<ActionResult<IEnumerable<Model>>> GetAllCarsModifications([FromQuery] string carModificationsHttpPath)
-        {
-            try
-            {
-                List<Car> brandCars = await this.carsService.GetAllCarsModificationsForModel(carModificationsHttpPath);
-                return Ok(brandCars);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogError(e, e.Message);
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpGet("brands/models/cars/image")]
-        public async Task<ActionResult<string>> GetImageForModel([FromQuery] string carImagePath)
-        {
-            try
-            {
-                string base64Image = await this.carsService.GetImageForModel(carImagePath);
-                return Ok(base64Image);
+                List<Car> modelCars = await this.carsService.GetAllCarsForModel(modelHttpPath);
+                return Ok(modelCars);
             }
             catch (Exception e)
             {
