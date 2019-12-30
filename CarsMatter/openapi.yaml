@@ -1,10 +1,10 @@
 swagger: '2.0'
 info:
   version: v1
-  title: Car finder API
+  title: Cars Matter API
 host: carfinderai.appspot.com
 paths:
-  /brands:
+  /api/cars/brands:
     get:
       tags:
         - Cars
@@ -21,7 +21,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Brand'
-  /brands/models:
+  /api/cars/brands/models:
     get:
       tags:
         - Cars
@@ -41,8 +41,8 @@ paths:
             uniqueItems: false
             type: array
             items:
-              $ref: '#/definitions/CarModel'
-  /brands/models/cars:
+              $ref: '#/definitions/BrandModel'
+  /api/cars/brands/models/cars:
     get:
       tags:
         - Cars
@@ -63,11 +63,50 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Model'
-  /api/Cars:
+  /api/cars/brands/models/cars/modifications:
     get:
       tags:
         - Cars
-      operationId: GetCars
+      operationId: GetAllCarsModifications
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: carModificationsHttpPath
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            uniqueItems: false
+            type: array
+            items:
+              $ref: '#/definitions/Model'
+  /api/cars/brands/models/cars/image:
+    get:
+      tags:
+        - Cars
+      operationId: GetImageForModel
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: carImagePath
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: string
+  /api/consumables_notes:
+    get:
+      tags:
+        - ConsumablesNotes
+      operationId: GetAllConsumablesNotes
       consumes: []
       produces:
         - application/json
@@ -79,7 +118,150 @@ paths:
             uniqueItems: false
             type: array
             items:
-              $ref: '#/definitions/Brand'
+              $ref: '#/definitions/RefillNote'
+    put:
+      tags:
+        - ConsumablesNotes
+      operationId: UpdateConsumablesNote
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: consumablesNote
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ConsumablesNote'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+    post:
+      tags:
+        - ConsumablesNotes
+      operationId: AddConsumablesNote
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: consumablesNote
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ConsumablesNote'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+  '/api/consumables_notes/{id}':
+    delete:
+      tags:
+        - ConsumablesNotes
+      operationId: DeleteConsumablesNote
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+  /api/refill_notes:
+    get:
+      tags:
+        - RefillNotes
+      operationId: GetAllRefillNotes
+      consumes: []
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            uniqueItems: false
+            type: array
+            items:
+              $ref: '#/definitions/RefillNote'
+    put:
+      tags:
+        - RefillNotes
+      operationId: UpdateRefillNote
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: refillNote
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/RefillNote'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+    post:
+      tags:
+        - RefillNotes
+      operationId: AddRefillNote
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: refillNote
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/RefillNote'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+  '/api/refill_notes/{id}':
+    delete:
+      tags:
+        - RefillNotes
+      operationId: DeleteRefillNote
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
 definitions:
   Brand:
     type: object
@@ -88,23 +270,13 @@ definitions:
         type: string
       brandName:
         type: string
-      models:
-        uniqueItems: false
-        type: array
-        items:
-          $ref: '#/definitions/CarModel'
-  CarModel:
+  BrandModel:
     type: object
     properties:
       httpPath:
         type: string
       modelName:
         type: string
-      models:
-        uniqueItems: false
-        type: array
-        items:
-          $ref: '#/definitions/Model'
   Model:
     type: object
     properties:
@@ -112,28 +284,7 @@ definitions:
         type: string
       modelName:
         type: string
-      carImage:
-        type: string
-      cars:
-        uniqueItems: false
-        type: array
-        items:
-          $ref: '#/definitions/Car'
-  Car:
-    type: object
-    properties:
-      name:
-        type: string
-      avitoUri:
-        type: string
-      characteristics:
-        $ref: '#/definitions/Сharacteristics'
-  Сharacteristics:
-    type: object
-    properties:
-      manufactureStartDate:
-        type: string
-      manufactureEndDate:
+      carImagePath:
         type: string
       lowPrice:
         format: double
@@ -141,8 +292,6 @@ definitions:
       highPrice:
         format: double
         type: number
-      transmission:
-        type: string
       bodyType:
         format: int32
         enum:
@@ -156,3 +305,44 @@ definitions:
           - 7
           - 8
         type: integer
+  RefillNote:
+    type: object
+    properties:
+      id:
+        format: int32
+        type: integer
+      location:
+        type: string
+      petrol:
+        format: float
+        type: number
+      odo:
+        format: int32
+        type: integer
+      price:
+        format: float
+        type: number
+      date:
+        format: date-time
+        type: string
+  ConsumablesNote:
+    type: object
+    properties:
+      id:
+        format: int32
+        type: integer
+      date:
+        format: date-time
+        type: string
+      kindOfService:
+        type: string
+      price:
+        format: float
+        type: number
+      odo:
+        format: int32
+        type: integer
+      location:
+        type: string
+      notes:
+        type: string

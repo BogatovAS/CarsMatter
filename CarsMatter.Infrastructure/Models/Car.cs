@@ -1,6 +1,4 @@
-﻿using CarsMatter.Infrastructure.Models.Enums;
-
-namespace CarsMatter.Infrastructure.Models
+﻿namespace CarsMatter.Infrastructure.Models
 {
     public class Car
     {
@@ -8,22 +6,11 @@ namespace CarsMatter.Infrastructure.Models
 
         public string AvitoUri { get; set; }
 
-        public Сharacteristics Characteristics { get; set; }
+        public string ManufactureStartDate { get; set; }
 
-        public class Сharacteristics
-        {
-            public string ManufactureStartDate { get; set; }
+        public string ManufactureEndDate { get; set; }
 
-            public string ManufactureEndDate { get; set; }
-
-            public decimal LowPrice { get; set; }
-
-            public decimal HighPrice { get; set; }
-
-            public string Transmission { get; set; }
-
-            public BodyType BodyType { get; set; }
-        }
+        public string Transmission { get; set; }
     }
 
 }

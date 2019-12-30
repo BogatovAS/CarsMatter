@@ -1,6 +1,7 @@
 ﻿using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
 using CarsMatter.Infrastructure.Repository;
+using CarsMatter.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 
 namespace CarsMatter
 {
@@ -30,7 +32,7 @@ namespace CarsMatter
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Use a PostgreSQL database
-            var sqlConnectionString = this.configuration.GetSection("CarFinderConnectionString").Value;
+            var sqlConnectionString = this.configuration.GetSection("CarsMatterConnectionString").Value;
 
             services.AddEntityFrameworkNpgsql().AddDbContext<CarsMatterDbContext>(options =>
                 options.UseNpgsql(
@@ -41,13 +43,20 @@ namespace CarsMatter
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Car finder API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Cars Matter API", Version = "v1" });
             });
 
-            services.AddTransient<ICarRepository, CarRepository>();
+            services.AddTransient<IRefillNotesRepository, RefillNotesRepository>();
+            services.AddTransient<IConsumablesNotesRepository, ConsumablesNotesRepository>();
+            services.AddTransient<ICarsService, CarsService>();
 
+            services.AddHttpClient<ICarsService, CarsService>(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri("https://avtomarket.ru");
+            });
+
+            services.AddMemoryCache();
             services.AddCors();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,5 +16,5 @@
     <string name="menu_refill">Заправка</string>
     <string name="menu_brand_models">Модели бренда</string>
 
-    <string name="api_base_path">https://carfinderai.appspot.com</string>
+    <string name="api_base_path">https://carfinderai.appspot.com/api</string>
 </resources>

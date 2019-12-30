@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using CarsMatter.Infrastructure.Models.Enums;
 
 namespace CarsMatter.Infrastructure.Models
 {
@@ -8,8 +8,12 @@ namespace CarsMatter.Infrastructure.Models
 
         public string ModelName { get; set; }
 
-        public string CarImage { get; set; }
+        public string CarImagePath { get; set; }
 
-        public List<Car> Cars { get; set; }
+        public decimal LowPrice { get; set; }
+
+        public decimal HighPrice { get; set; }
+
+        public BodyType BodyType { get; set; }
     }
 }

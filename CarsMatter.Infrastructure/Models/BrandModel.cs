@@ -1,9 +1,9 @@
 ﻿namespace CarsMatter.Infrastructure.Models
 {
-    public class Brand
+    public class BrandModel
     {
         public string HttpPath { get; set; }
 
-        public string BrandName { get; set; }
+        public string ModelName { get; set; }
     }
 }
