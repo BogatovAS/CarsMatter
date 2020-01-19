@@ -32,6 +32,7 @@ namespace CarsMatter.Infrastructure.Helpers
 
                 carModels.Add(model);
             }
+
             return carModels;
         }
 
@@ -99,6 +100,7 @@ namespace CarsMatter.Infrastructure.Helpers
                     cars.Add(model);
                 }
             }
+
             return cars;
         }
 
@@ -113,10 +115,12 @@ namespace CarsMatter.Infrastructure.Helpers
             {
                 pricesList.Add(pricesList[0]);
             }
+
             if (pricesList.Count == 0)
             {
                 pricesList.AddRange(new[] { "0", "0" });
             }
+
             return pricesList;
         }
 
@@ -127,6 +131,7 @@ namespace CarsMatter.Infrastructure.Helpers
             {
                 dates.Add("в производстве");
             }
+
             if (dates.Count == 0)
             {
                 dates.AddRange(new[] { "-", "-" });

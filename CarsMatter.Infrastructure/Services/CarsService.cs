@@ -38,7 +38,7 @@ namespace CarsMatter.Infrastructure.Services
                 return brands;
             }
 
-            HttpResponseMessage response = await httpClient.GetAsync("catalog/");
+            HttpResponseMessage response = await this.httpClient.GetAsync("catalog/");
             string htmlDocument = await response.Content.ReadAsStringAsync();
 
             try
@@ -62,7 +62,7 @@ namespace CarsMatter.Infrastructure.Services
                 return brandModels;
             }
 
-            HttpResponseMessage response = await httpClient.GetAsync(brandHttpPath);
+            HttpResponseMessage response = await this.httpClient.GetAsync(brandHttpPath);
             string htmlDocument = await response.Content.ReadAsStringAsync();
 
             try
@@ -86,16 +86,16 @@ namespace CarsMatter.Infrastructure.Services
                 return cars;
             }
 
-            HttpResponseMessage response = await httpClient.GetAsync(carModelHttpPath);
+            HttpResponseMessage response = await this.httpClient.GetAsync(carModelHttpPath);
             string htmlDocument = await response.Content.ReadAsStringAsync();
 
             try
             {
                 cars = await CarsHtmlParser.ParseCarsForModel(htmlDocument);
 
-                for(int i=0; i < cars.Count; i++)
+                foreach (Car car in cars)
                 {
-                    cars[i].Base64CarImage = await GetImageForModel(cars[i].CarImagePath);
+                    car.Base64CarImage = await this.GetImageForModel(car.CarImagePath);
                 }
 
                 this.memoryCache.Set($"car.model.{carModelHttpPath}.cars", cars, this.memoryCacheEntryOptions);
@@ -110,7 +110,7 @@ namespace CarsMatter.Infrastructure.Services
 
         private async Task<string> GetImageForModel(string modelImageHttpPath)
         {
-            HttpResponseMessage carImageResponse = await httpClient.GetAsync(modelImageHttpPath);
+            HttpResponseMessage carImageResponse = await this.httpClient.GetAsync(modelImageHttpPath);
             string carImageBase64 = Convert.ToBase64String(await carImageResponse.Content.ReadAsByteArrayAsync());
 
             return carImageBase64;

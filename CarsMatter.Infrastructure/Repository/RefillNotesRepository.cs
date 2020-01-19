@@ -21,9 +21,9 @@
             this.logger = logger;
         }
 
-        public Task<List<RefillNote>> GetAllRefillNotes()
+        public async Task<List<RefillNote>> GetAllRefillNotes()
         {
-            return Task.Run(() => this.dbContext.RefillNotes.ToList());
+            return await Task.Run(() => this.dbContext.RefillNotes.ToList());
         }
 
         public async Task<bool> AddRefillNote(RefillNote refillNote)

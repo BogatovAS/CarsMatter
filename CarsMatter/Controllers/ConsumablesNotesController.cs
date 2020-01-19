@@ -8,7 +8,9 @@
     using System;
     using Microsoft.Extensions.Logging;
     using CarsMatter.Infrastructure.Models.Journal;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize]
     [Route("api/consumables_notes")]
     [ApiController, Produces("application/json")]
     public class ConsumablesNotesController : ControllerBase

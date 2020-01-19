@@ -1,7 +1,11 @@
-﻿using CarsMatter.Infrastructure.Db;
+﻿using CarsMatter.Infrastructure.Authentication;
+using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
+using CarsMatter.Infrastructure.Jobs;
 using CarsMatter.Infrastructure.Repository;
 using CarsMatter.Infrastructure.Services;
+using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +18,10 @@ using System;
 
 namespace CarsMatter
 {
+    using Hangfire.MemoryStorage;
+
     public class Startup
     {
-
         private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
@@ -24,11 +29,18 @@ namespace CarsMatter
             this.configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(hangfireConfiguration =>
+            {
+                hangfireConfiguration
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseMemoryStorage();
+            });
+            services.AddHangfireServer();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Use a PostgreSQL database
@@ -38,7 +50,7 @@ namespace CarsMatter
                 options.UseNpgsql(
                     sqlConnectionString,
                     b => b.MigrationsAssembly("AspNet5MultipleProject")
-                ));
+                ), ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -49,6 +61,11 @@ namespace CarsMatter
             services.AddTransient<IRefillNotesRepository, RefillNotesRepository>();
             services.AddTransient<IConsumablesNotesRepository, ConsumablesNotesRepository>();
             services.AddTransient<ICarsService, CarsService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IBrandsRepository, BrandsRepository>();
+            services.AddTransient<IBrandModelsRepository, BrandModelsRepository>();
+            services.AddTransient<ICarsRepository, CarsRepository>();
+            services.AddTransient<IFavoriteCarsRepository, FavoriteCarsRepository>();
 
             services.AddHttpClient<ICarsService, CarsService>(httpClient =>
             {
@@ -57,6 +74,9 @@ namespace CarsMatter
 
             services.AddMemoryCache();
             services.AddCors();
+
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +108,12 @@ namespace CarsMatter
 
             app.UseRewriter(rewriteOptions);
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+
+            app.UseHangfireDashboard();
+            RecurringJob.AddOrUpdate<UpdateAllCarsJob>("updateAllCarsJob", job => job.Run(), Cron.Daily);
+
             app.UseMvc();
         }
     }

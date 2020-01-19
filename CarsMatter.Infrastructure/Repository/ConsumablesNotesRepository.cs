@@ -21,9 +21,9 @@
             this.logger = logger;
         }
 
-        public Task<List<ConsumablesNote>> GetAllConsumablesNotes()
+        public async Task<List<ConsumablesNote>> GetAllConsumablesNotes()
         {
-            return Task.Run(() => this.dbContext.ConsumablesNotes.ToList());
+            return await Task.Run(() => this.dbContext.ConsumablesNotes.ToList());
         }
 
         public async Task<bool> AddConsumablesNote(ConsumablesNote consumablesNote)
