@@ -1,17 +1,16 @@
-﻿using CarsMatter.Infrastructure.Models.Journal;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
 {
-    public interface IConsumablesNotesRepository
+    public interface IConsumablesNotesRepository<T>
     {
-        Task<List<ConsumablesNote>> GetAllConsumablesNotes();
+        Task<List<T>> GetAllConsumablesNotes(string userId);
 
-        Task<bool> AddConsumablesNote(ConsumablesNote consumablesNote);
+        Task AddConsumablesNote(T consumablesNote);
 
-        Task<bool> UpdateConsumablesNote(ConsumablesNote consumablesNote);
+        Task UpdateConsumablesNote(T consumablesNote);
 
-        Task<bool> DeleteConsumablesNote(int consumablesNoteId);
+        Task DeleteConsumablesNote(string consumablesNoteId);
     }
 }

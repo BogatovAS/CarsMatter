@@ -7,20 +7,22 @@
     using System.Collections.Generic;
     using System;
     using Microsoft.Extensions.Logging;
-    using CarsMatter.Infrastructure.Models.Journal;
+    using CarsMatter.Infrastructure.Models.MsSQL;
     using Microsoft.AspNetCore.Authorization;
+    using System.Linq;
+    using System.Security.Claims;
 
     [Authorize]
     [Route("api/consumables_notes")]
     [ApiController, Produces("application/json")]
     public class ConsumablesNotesController : ControllerBase
     {
-        private readonly IConsumablesNotesRepository consumablesNotesRepository;
+        private readonly IConsumablesNotesRepository<ConsumablesNote> consumablesNotesRepository;
 
         private readonly ILogger<ConsumablesNotesController> logger;
 
         public ConsumablesNotesController(
-            IConsumablesNotesRepository consumablesNotesRepository, 
+            IConsumablesNotesRepository<ConsumablesNote> consumablesNotesRepository, 
             ILogger<ConsumablesNotesController> logger)
         {
             this.consumablesNotesRepository = consumablesNotesRepository;
@@ -32,7 +34,9 @@
         {
             try
             {
-                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetAllConsumablesNotes();
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetAllConsumablesNotes(userId);
                 return Ok(consumablesNotes);
             }
             catch (Exception e)
@@ -47,8 +51,12 @@
         {
             try
             {
-                bool response = await this.consumablesNotesRepository.AddConsumablesNote(consumablesNote);
-                return Ok(response);
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                consumablesNote.UserId = userId;
+
+                await this.consumablesNotesRepository.AddConsumablesNote(consumablesNote);
+                return Ok(true);
             }
             catch (Exception e)
             {
@@ -62,8 +70,8 @@
         {
             try
             {
-                bool response = await this.consumablesNotesRepository.UpdateConsumablesNote(consumablesNote);
-                return Ok(response);
+                await this.consumablesNotesRepository.UpdateConsumablesNote(consumablesNote);
+                return Ok(true);
             }
             catch (Exception e)
             {
@@ -73,12 +81,12 @@
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> DeleteConsumablesNote([FromRoute] int id)
+        public async Task<ActionResult<bool>> DeleteConsumablesNote([FromRoute] string id)
         {
             try
             {
-                bool response = await this.consumablesNotesRepository.DeleteConsumablesNote(id);
-                return Ok(response);
+                await this.consumablesNotesRepository.DeleteConsumablesNote(id);
+                return Ok(true);
             }
             catch (Exception e)
             {

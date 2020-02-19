@@ -7,20 +7,22 @@
     using System.Collections.Generic;
     using System;
     using Microsoft.Extensions.Logging;
-    using CarsMatter.Infrastructure.Models.Journal;
+    using CarsMatter.Infrastructure.Models.MsSQL;
     using Microsoft.AspNetCore.Authorization;
+    using System.Linq;
+    using System.Security.Claims;
 
     [Authorize]
     [Route("api/refill_notes")]
     [ApiController, Produces("application/json")]
     public class RefillNotesController : ControllerBase
     {
-        private readonly IRefillNotesRepository refillNotesRepository;
+        private readonly IRefillNotesRepository<RefillNote> refillNotesRepository;
 
         private readonly ILogger<RefillNotesController> logger;
 
         public RefillNotesController(
-            IRefillNotesRepository refillNotesRepository, 
+            IRefillNotesRepository<RefillNote> refillNotesRepository,
             ILogger<RefillNotesController> logger)
         {
             this.refillNotesRepository = refillNotesRepository;
@@ -32,7 +34,9 @@
         {
             try
             {
-                List<RefillNote> refillNotes = await this.refillNotesRepository.GetAllRefillNotes();
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                List<RefillNote> refillNotes = await this.refillNotesRepository.GetAllRefillNotes(userId);
                 return Ok(refillNotes);
             }
             catch (Exception e)
@@ -47,8 +51,12 @@
         {
             try
             {
-                bool response = await this.refillNotesRepository.AddRefillNote(refillNote);
-                return Ok(response);
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                refillNote.UserId = userId;
+
+                await this.refillNotesRepository.AddRefillNote(refillNote);
+                return Ok(true);
             }
             catch (Exception e)
             {
@@ -62,8 +70,8 @@
         {
             try
             {
-                bool response = await this.refillNotesRepository.UpdateRefillNote(refillNote);
-                return Ok(response);
+                await this.refillNotesRepository.UpdateRefillNote(refillNote);
+                return Ok(true);
             }
             catch (Exception e)
             {
@@ -73,12 +81,12 @@
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> DeleteRefillNote([FromRoute] int id)
+        public async Task<ActionResult<bool>> DeleteRefillNote([FromRoute] string id)
         {
             try
             {
-                bool response = await this.refillNotesRepository.DeleteRefillNote(id);
-                return Ok(response);
+                await this.refillNotesRepository.DeleteRefillNote(id);
+                return Ok(true);
             }
             catch (Exception e)
             {

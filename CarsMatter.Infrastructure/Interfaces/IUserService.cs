@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using CarsMatter.Infrastructure.Models.MsSQL;
+using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
 {
@@ -6,6 +7,10 @@ namespace CarsMatter.Infrastructure.Interfaces
     {
         Task<bool> Authenticate(string username, string password);
 
-        Task<int> GetUserIdByUsername(string username);
+        Task<string> GetUserIdByUsername(string username);
+
+        Task<User> Create(User user, string password);
+
+        Task Delete(string id);
     }
 }

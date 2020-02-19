@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.AsyncInitialization" Version="1.1.2" />
     <PackageReference Include="HangFire" Version="1.7.8" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.8" />
     <PackageReference Include="Hangfire.MemoryStorage" Version="1.6.3" />
@@ -19,8 +20,8 @@
     <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="4.0.1" />
   </ItemGroup>
@@ -30,8 +31,5 @@
   </ItemGroup>
 
   <!-- Copy the app.yaml on publish -->
-  <ItemGroup>
-    <None Include="app.yaml" CopyToOutputDirectory="Always" />
-  </ItemGroup>
 
 </Project>

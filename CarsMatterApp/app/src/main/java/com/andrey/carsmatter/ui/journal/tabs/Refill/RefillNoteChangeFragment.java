@@ -67,7 +67,7 @@ public class RefillNoteChangeFragment extends Fragment {
 
         try {
             this.currentRefillNote = new RefillNote();
-            this.currentRefillNote.Id = getArguments().getInt("id");
+            this.currentRefillNote.Id = getArguments().getString("id");
             this.currentRefillNote.Location = getArguments().getString("location");
             this.currentRefillNote.Petrol = getArguments().getFloat("petrol");
             this.currentRefillNote.Odo = getArguments().getInt("odo");

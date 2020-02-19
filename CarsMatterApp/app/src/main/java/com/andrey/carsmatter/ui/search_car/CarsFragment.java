@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class CarsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.carsRepository = new CarsRepository(getContext());
-        this.adapter = new CarsAdapter(getContext(), this.cars);
+        this.adapter = new CarsAdapter(getContext(), getActivity(), this.cars);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(R.layout.progress_bar_dialog);
@@ -49,8 +50,8 @@ public class CarsFragment extends Fragment {
         new Thread(null, new Runnable() {
             @Override
             public void run() {
-                String brandModelHttpPath = getArguments().getString("brandModelHttpPath");
-                cars = carsRepository.GetCarsForModel(brandModelHttpPath);
+                String brandModelId = getArguments().getString("brandModelId");
+                cars = carsRepository.GetCarsForModel(brandModelId);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

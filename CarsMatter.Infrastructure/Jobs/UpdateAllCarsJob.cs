@@ -1,7 +1,6 @@
 ﻿using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Jobs
@@ -10,15 +9,15 @@ namespace CarsMatter.Infrastructure.Jobs
     {
         private readonly ICarsService carsService;
 
-        private readonly IBrandsRepository brandsRepository;
-        private readonly IBrandModelsRepository brandModelsRepository;
-        private readonly ICarsRepository carsRepository;
+        private readonly IBrandsRepository<Brand> brandsRepository;
+        private readonly IBrandModelsRepository<BrandModel> brandModelsRepository;
+        private readonly ICarsRepository<Car> carsRepository;
 
         public UpdateAllCarsJob(
             ICarsService carsService,
-            IBrandsRepository brandsRepository,
-            IBrandModelsRepository brandModelsRepository,
-            ICarsRepository carsRepository)
+            IBrandsRepository<Brand> brandsRepository,
+            IBrandModelsRepository<BrandModel> brandModelsRepository,
+            ICarsRepository<Car> carsRepository)
         {
             this.carsService = carsService;
             this.brandModelsRepository = brandModelsRepository;

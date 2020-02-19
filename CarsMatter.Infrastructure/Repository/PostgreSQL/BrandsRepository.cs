@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 
 namespace CarsMatter.Infrastructure.Repository
 {
-    public class BrandsRepository : IBrandsRepository
+    public class BrandsRepository : IBrandsRepository<Brand>
     {
         private readonly CarsMatterDbContext dbContext;
 
@@ -24,27 +24,26 @@ namespace CarsMatter.Infrastructure.Repository
 
         public async Task<List<Brand>> GetAllBrands()
         {
-            return await Task.Run(() => this.dbContext.Brands.ToList());
+            return await Task.Run(() => this.dbContext.Brands.OrderBy(brand => brand.BrandName).ToList());
         }
 
-        public async Task<Brand> AddBrand(Brand brand)
+        public async Task AddBrand(Brand brand)
         {
-            var createdBrand = this.dbContext.Brands.Add(brand);
+            this.dbContext.Brands.Add(brand);
             await this.SaveChanges();
-            return createdBrand.Entity;
         }
 
-        public async Task<bool> DeleteBrand(int brandId)
+        public async Task DeleteBrand(string brandId)
         {
             Brand brand = this.dbContext.Brands.FirstOrDefault(br => br.Id == brandId);
             this.dbContext.Brands.Remove(brand);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async Task<Brand> UpdateBrand(Brand brand)
+        public async Task UpdateBrand(Brand brand)
         {
             EntityEntry<Brand> updatedBrand;
-            Brand existingBrand = this.dbContext.Brands.FirstOrDefault(br => br.Id == brand.Id);
+            Brand existingBrand = this.dbContext.Brands.FirstOrDefault(br => br.BrandName == brand.BrandName);
 
             if (existingBrand != null)
             {
@@ -55,7 +54,6 @@ namespace CarsMatter.Infrastructure.Repository
                 updatedBrand = this.dbContext.Brands.Add(brand);
             }
             await this.SaveChanges();
-            return updatedBrand.Entity;
         }
 
         private async Task<bool> SaveChanges()

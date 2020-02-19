@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace CarsMatter.Infrastructure.Models.Journal
+namespace CarsMatter.Infrastructure.Models.MsSQL
 {
     public class ConsumablesNote
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -17,5 +17,7 @@ namespace CarsMatter.Infrastructure.Models.Journal
         public string Location { get; set; }
 
         public string Notes { get; set; }
+
+        public string UserId { get; set; }
     }
 }

@@ -3,11 +3,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Автомобильное дело</string>
-    <string name="nav_header_subtitle">https://carfinderai.appspot.com</string>
+    <string name="nav_header_subtitle">https://carsmatterapp.azurewebsites.net</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Настройки</string>
 
-    <string name="menu_search_auto">Бренды</string>
+    <string name="menu_search_auto">Автомобили</string>
     <string name="menu_favorites">Избранное</string>
     <string name="menu_journal">Бортжурнал</string>
     <string name="menu_recognize">Распознать</string>
@@ -16,6 +16,6 @@
     <string name="menu_refill">Заправка</string>
     <string name="menu_brand_models">Модели бренда</string>
 
-    <string name="api_base_path">https://carfinderai.appspot.com/api</string>
+    <string name="api_base_path">https://carsmatterapp.azurewebsites.net/api</string>
     <string name="menu_cars">Модели машин</string>
 </resources>

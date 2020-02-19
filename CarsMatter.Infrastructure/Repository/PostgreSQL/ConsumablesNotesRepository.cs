@@ -5,11 +5,11 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.Threading.Tasks;
-    using CarsMatter.Infrastructure.Models.Journal;
+    using CarsMatter.Infrastructure.Models.MsSQL;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ConsumablesNotesRepository : IConsumablesNotesRepository
+    public class ConsumablesNotesRepository : IConsumablesNotesRepository<ConsumablesNote>
     {
         private readonly CarsMatterDbContext dbContext;
 
@@ -21,28 +21,28 @@
             this.logger = logger;
         }
 
-        public async Task<List<ConsumablesNote>> GetAllConsumablesNotes()
+        public async Task<List<ConsumablesNote>> GetAllConsumablesNotes(string userId)
         {
-            return await Task.Run(() => this.dbContext.ConsumablesNotes.ToList());
+            return await Task.Run(() => this.dbContext.ConsumablesNotes.Where(note => note.UserId == userId).ToList());
         }
 
-        public async Task<bool> AddConsumablesNote(ConsumablesNote consumablesNote)
+        public async Task AddConsumablesNote(ConsumablesNote consumablesNote)
         {
             this.dbContext.ConsumablesNotes.Add(consumablesNote);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async Task<bool> UpdateConsumablesNote(ConsumablesNote consumablesNote)
+        public async Task UpdateConsumablesNote(ConsumablesNote consumablesNote)
         {
             this.dbContext.ConsumablesNotes.Update(consumablesNote);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async Task<bool> DeleteConsumablesNote(int consumablesNoteId)
+        public async Task DeleteConsumablesNote(string consumablesNoteId)
         {
             ConsumablesNote consumablesNote = this.dbContext.ConsumablesNotes.FirstOrDefault(consumablesNote => consumablesNote.Id == consumablesNoteId);
             this.dbContext.ConsumablesNotes.Remove(consumablesNote);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
         private async Task<bool> SaveChanges()

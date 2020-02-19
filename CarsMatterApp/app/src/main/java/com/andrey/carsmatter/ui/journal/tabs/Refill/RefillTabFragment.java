@@ -106,7 +106,7 @@ public class RefillTabFragment extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
                 Bundle params = new Bundle();
-                params.putInt("id", selectedNote.Id);
+                params.putString("id", selectedNote.Id);
                 params.putString("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(selectedNote.Date));
                 params.putString("location", selectedNote.Location);
                 params.putFloat("petrol", selectedNote.Petrol);

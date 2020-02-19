@@ -8,7 +8,7 @@ import java.util.Date;
 public class RefillNote{
     @SerializedName("id")
     @Expose
-    public int Id;
+    public String Id;
 
     @SerializedName("location")
     @Expose

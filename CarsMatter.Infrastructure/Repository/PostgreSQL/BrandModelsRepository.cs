@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 
 namespace CarsMatter.Infrastructure.Repository
 {
-    public class BrandModelsRepository : IBrandModelsRepository
+    public class BrandModelsRepository : IBrandModelsRepository<BrandModel>
     {
         private readonly CarsMatterDbContext dbContext;
 
@@ -22,29 +22,31 @@ namespace CarsMatter.Infrastructure.Repository
             this.logger = logger;
         }
 
-        public async Task<List<BrandModel>> GetAllBrandModels(int brandId)
+        public async Task<List<BrandModel>> GetAllBrandModels(string brandId)
         {
-            return await Task.Run(() => this.dbContext.BrandModels.Where(brandModel => brandModel.BrandId == brandId).ToList());
+            return await Task.Run(() => this.dbContext.BrandModels
+            .Where(brandModel => brandModel.BrandId == brandId)
+            .OrderBy(brandModel => brandModel.ModelName)
+            .ToList());
         }
 
-        public async Task<BrandModel> AddBrandModel(BrandModel brandModel)
+        public async Task AddBrandModel(BrandModel brandModel)
         {
-            var createdBrandModel = this.dbContext.BrandModels.Add(brandModel);
+            this.dbContext.BrandModels.Add(brandModel);
             await this.SaveChanges();
-            return createdBrandModel.Entity;
         }
 
-        public async Task<bool> DeleteBrandModel(int brandModelId)
+        public async Task DeleteBrandModel(string brandModelId)
         {
             BrandModel brandModel = this.dbContext.BrandModels.FirstOrDefault(bm => bm.Id == brandModelId);
             this.dbContext.BrandModels.Remove(brandModel);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async  Task<BrandModel> UpdateBrandModel(BrandModel brandModel)
+        public async  Task UpdateBrandModel(BrandModel brandModel)
         {
             EntityEntry<BrandModel> updatedBrandModel;
-            BrandModel existingBrandModel = this.dbContext.BrandModels.FirstOrDefault(bm => bm.Id == brandModel.Id);
+            BrandModel existingBrandModel = this.dbContext.BrandModels.FirstOrDefault(bm => bm.ModelName == brandModel.ModelName);
 
             if(existingBrandModel != null)
             {
@@ -55,7 +57,6 @@ namespace CarsMatter.Infrastructure.Repository
                 updatedBrandModel = this.dbContext.BrandModels.Add(brandModel);
             }
             await this.SaveChanges();
-            return updatedBrandModel.Entity;
         }
 
         private async Task<bool> SaveChanges()

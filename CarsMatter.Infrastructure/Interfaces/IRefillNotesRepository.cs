@@ -1,17 +1,16 @@
-﻿using CarsMatter.Infrastructure.Models.Journal;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
 {
-    public interface IRefillNotesRepository
+    public interface IRefillNotesRepository<T>
     {
-        Task<List<RefillNote>> GetAllRefillNotes();
+        Task<List<T>> GetAllRefillNotes(string userId);
 
-        Task<bool> AddRefillNote(RefillNote refillNote);
+        Task AddRefillNote(T refillNote);
 
-        Task<bool> UpdateRefillNote(RefillNote refillNote);
+        Task UpdateRefillNote(T refillNote);
 
-        Task<bool> DeleteRefillNote(int refillNoteId);
+        Task DeleteRefillNote(string refillNoteId);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using CarsMatter.Infrastructure.Helpers;
 using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
-using Microsoft.Extensions.Caching.Memory;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,29 +13,17 @@ namespace CarsMatter.Infrastructure.Services
     {
         private readonly HttpClient httpClient;
 
-        private readonly IMemoryCache memoryCache;
-
         private readonly ILogger<CarsService> logger;
 
-        private readonly MemoryCacheEntryOptions memoryCacheEntryOptions = new MemoryCacheEntryOptions
+        public CarsService(IHttpClientFactory httpClientFactory, ILogger<CarsService> logger)
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
-        };
-
-        public CarsService(HttpClient httpClient, IMemoryCache memoryCache, ILogger<CarsService> logger)
-        {
-            this.httpClient = httpClient;
-            this.memoryCache = memoryCache;
+            this.httpClient = httpClientFactory.CreateClient("avtomarket");
             this.logger = logger;
         }
 
         public async Task<List<Brand>> GetAllBrands()
         {
             List<Brand> brands = new List<Brand>();
-            if (this.memoryCache.TryGetValue("car.brands", out brands))
-            {
-                return brands;
-            }
 
             HttpResponseMessage response = await this.httpClient.GetAsync("catalog/");
             string htmlDocument = await response.Content.ReadAsStringAsync();
@@ -44,7 +31,6 @@ namespace CarsMatter.Infrastructure.Services
             try
             {
                 brands = await CarsHtmlParser.ParseBrands(htmlDocument);
-                this.memoryCache.Set("car.brands", brands, this.memoryCacheEntryOptions);
             }
             catch (Exception e)
             {
@@ -57,10 +43,6 @@ namespace CarsMatter.Infrastructure.Services
         public async Task<List<BrandModel>> GetAllBrandModels(string brandHttpPath)
         {
             List<BrandModel> brandModels = new List<BrandModel>();
-            if (this.memoryCache.TryGetValue($"car.brand.{brandHttpPath}.models", out brandModels))
-            {
-                return brandModels;
-            }
 
             HttpResponseMessage response = await this.httpClient.GetAsync(brandHttpPath);
             string htmlDocument = await response.Content.ReadAsStringAsync();
@@ -68,7 +50,6 @@ namespace CarsMatter.Infrastructure.Services
             try
             {
                 brandModels = await CarsHtmlParser.ParseBrandModels(htmlDocument);
-                this.memoryCache.Set($"car.brand.{brandHttpPath}.models", brandModels, this.memoryCacheEntryOptions);
             }
             catch (Exception e)
             {
@@ -81,10 +62,6 @@ namespace CarsMatter.Infrastructure.Services
         public async Task<List<Car>> GetAllCarsForModel(string carModelHttpPath)
         {
             List<Car> cars = new List<Car>();
-            if (this.memoryCache.TryGetValue($"car.model.{carModelHttpPath}.cars", out cars))
-            {
-                return cars;
-            }
 
             HttpResponseMessage response = await this.httpClient.GetAsync(carModelHttpPath);
             string htmlDocument = await response.Content.ReadAsStringAsync();
@@ -92,13 +69,6 @@ namespace CarsMatter.Infrastructure.Services
             try
             {
                 cars = await CarsHtmlParser.ParseCarsForModel(htmlDocument);
-
-                foreach (Car car in cars)
-                {
-                    car.Base64CarImage = await this.GetImageForModel(car.CarImagePath);
-                }
-
-                this.memoryCache.Set($"car.model.{carModelHttpPath}.cars", cars, this.memoryCacheEntryOptions);
             }
             catch (Exception e)
             {
@@ -106,14 +76,6 @@ namespace CarsMatter.Infrastructure.Services
             }
 
             return cars;
-        }
-
-        private async Task<string> GetImageForModel(string modelImageHttpPath)
-        {
-            HttpResponseMessage carImageResponse = await this.httpClient.GetAsync(modelImageHttpPath);
-            string carImageBase64 = Convert.ToBase64String(await carImageResponse.Content.ReadAsByteArrayAsync());
-
-            return carImageBase64;
         }
     }
 }

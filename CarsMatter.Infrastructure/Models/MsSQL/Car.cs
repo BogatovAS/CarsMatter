@@ -1,26 +1,23 @@
-﻿using CarsMatter.Infrastructure.Models.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CarsMatter.Infrastructure.Models
+namespace CarsMatter.Infrastructure.Models.MsSQL
 {
     public class Car
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        [JsonIgnore]
-        public string HttpPath { get; set; }
-
-        public string ModelName { get; set; }
+        public string CarName { get; set; }
 
         [JsonIgnore]
         public string CarImagePath { get; set; }
 
+
         public string Base64CarImage { get; set; }
 
-        public decimal LowPrice { get; set; }
+        public float LowPrice { get; set; }
 
-        public decimal HighPrice { get; set; }
+        public float HighPrice { get; set; }
 
         public string ManufactureStartDate { get; set; }
 
@@ -28,9 +25,9 @@ namespace CarsMatter.Infrastructure.Models
 
         public string AvitoUri { get; set; }
         
-        public BodyType BodyType { get; set; }
+        public string BodyType { get; set; }
 
-        public int BrandModelId { get; set; }
+        public string BrandModelId { get; set; }
 
         [ForeignKey("BrandModelId")]
         public BrandModel BrandModel { get; set; }

@@ -9,6 +9,8 @@ import com.andrey.carsmatter.models.BrandModel;
 import com.andrey.carsmatter.models.Car;
 import com.andrey.carsmatter.models.ConsumablesNote;
 import com.andrey.carsmatter.models.RefillNote;
+import com.andrey.carsmatter.models.User;
+import com.andrey.carsmatter.models.UserModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -56,7 +58,7 @@ public class CarsRepository {
         return Boolean.parseBoolean(responseString);
     }
 
-    public boolean DeleteRefillNote(int id) {
+    public boolean DeleteRefillNote(String id) {
         String url = this.apiUrl + "/refill_notes/" + id;
         String responseString = this.httpHandler.deleteHttpRequest(url);
         return Boolean.parseBoolean(responseString);
@@ -74,7 +76,7 @@ public class CarsRepository {
         return Boolean.parseBoolean(responseString);
     }
 
-    public boolean DeleteConsumablesNote(int id) {
+    public boolean DeleteConsumablesNote(String id) {
         String url = this.apiUrl + "/consumables_notes/" + id;
         String responseString = this.httpHandler.deleteHttpRequest(url);
         return Boolean.parseBoolean(responseString);
@@ -87,17 +89,55 @@ public class CarsRepository {
         return brands;
     }
 
-    public ArrayList<BrandModel> GetModelsForBrand(String brandHttpPath){
-        String url = this.apiUrl + "/cars/brands/models?brandHttpPath=" + brandHttpPath;
+    public ArrayList<BrandModel> GetModelsForBrand(String brandId){
+        String url = this.apiUrl + "/cars/brands/" + brandId + "/models";
         String responseString = this.httpHandler.getHttpResponse(url);
         ArrayList<BrandModel> brandModels = this.gson.fromJson(responseString,  new TypeToken<ArrayList<BrandModel>>(){}.getType());
         return brandModels;
     }
 
-    public ArrayList<Car> GetCarsForModel(String modelHttpPath){
-        String url = this.apiUrl + "/cars/brands/models/cars?modelHttpPath=" + modelHttpPath;
+    public ArrayList<Car> GetCarsForModel(String modelId){
+        String url = this.apiUrl + "/cars/brands/models/" + modelId + "/cars";
         String responseString = this.httpHandler.getHttpResponse(url);
         ArrayList<Car> cars = this.gson.fromJson(responseString,  new TypeToken<ArrayList<Car>>(){}.getType());
         return cars;
+    }
+
+    public boolean IsFavoriteCar(String carId){
+        String url = this.apiUrl + "/favorite_cars/" + carId;
+        boolean result = Boolean.parseBoolean(this.httpHandler.getHttpResponse(url));
+        return result;
+    }
+
+    public boolean AddCarToFavorite(String carId) {
+        String url = this.apiUrl + "/favorite_cars/" + carId;
+        String responseString = this.httpHandler.postHttpRequest(url,  this.gson.toJson(""));
+        return Boolean.parseBoolean(responseString);
+    }
+
+    public boolean RemoveCarFromFavorite(String carId){
+        String url = this.apiUrl + "/favorite_cars/" + carId;
+        String responseString = this.httpHandler.deleteHttpRequest(url);
+        return Boolean.parseBoolean(responseString);
+    }
+
+    public  ArrayList<Car> GetAllFavoriteCars(){
+        String url = this.apiUrl + "/favorite_cars/";
+        String responseString = this.httpHandler.getHttpResponse(url);
+        ArrayList<Car> cars = this.gson.fromJson(responseString,  new TypeToken<ArrayList<Car>>(){}.getType());
+        return cars;
+    }
+
+    public boolean Login(String username, String password) {
+        String url = this.apiUrl + "/user/logIn";
+
+        User.setCurrentUser(username, password);
+
+        UserModel user = new UserModel();
+        user.Username = User.getCurrentUser().Username;
+        user.Password = User.getCurrentUser().Password;
+
+        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(user));
+        return Boolean.parseBoolean(responseString);
     }
 }

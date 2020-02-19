@@ -1,8 +1,8 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
-using CarsMatter.Infrastructure.Models;
-using CarsMatter.Infrastructure.Models.Enums;
+using CarsMatter.Infrastructure.Models.MsSQL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -24,7 +24,7 @@ namespace CarsMatter.Infrastructure.Helpers
 
             foreach (IHtmlListItemElement modelElement in modelsList.QuerySelectorAll("li"))
             {
-                BrandModel model = new BrandModel
+                BrandModel model = new BrandModel()
                 {
                     ModelName = modelElement.TextContent,
                     HttpPath = modelElement.QuerySelector<IHtmlAnchorElement>("a").PathName
@@ -46,7 +46,7 @@ namespace CarsMatter.Infrastructure.Helpers
 
             foreach (IHtmlListItemElement brandElement in brandsList.QuerySelectorAll("li"))
             {
-                Brand brand = new Brand
+                Brand brand = new Brand()
                 {
                     HttpPath = brandElement.QuerySelector<IHtmlAnchorElement>("a").PathName,
                     BrandName = brandElement.TextContent
@@ -72,8 +72,6 @@ namespace CarsMatter.Infrastructure.Helpers
 
                 foreach (IHtmlListItemElement carElement in carBodyTypeElement.QuerySelector<IHtmlUnorderedListElement>("ul").QuerySelectorAll("li"))
                 {
-                    BodyType currentBodyType = BodyTypeHelper.MapBodyType(bodyTypeString);
-
                     List<IHtmlParagraphElement> characteristicsElement = carElement.QuerySelectorAll<IHtmlParagraphElement>("p").ToList();
 
                     List<string> prices = new List<string> { "0", "0" };
@@ -84,17 +82,16 @@ namespace CarsMatter.Infrastructure.Helpers
 
                     List<string> dates = ParseManufactureDates(characteristicsElement[1].TextContent);
 
-                    Car model = new Car
+                    Car model = new Car()
                     {
-                        ModelName = characteristicsElement[0].TextContent,
-                        HttpPath = carElement.QuerySelector<IHtmlAnchorElement>("a").PathName,
-                        LowPrice = decimal.Parse(prices[0]),
-                        HighPrice = decimal.Parse(prices[1]),
+                        CarName = characteristicsElement[0].TextContent,
+                        LowPrice = float.Parse(prices[0]),
+                        HighPrice = float.Parse(prices[1]),
                         ManufactureStartDate = dates[0],
                         ManufactureEndDate = dates[1],
                         CarImagePath = carElement.QuerySelector<IHtmlImageElement>("img").Source.Remove(0, 8),
                         AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={characteristicsElement[0].TextContent}",
-                        BodyType = currentBodyType,
+                        BodyType = bodyTypeString,
                     };
 
                     cars.Add(model);

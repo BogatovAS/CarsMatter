@@ -1,17 +1,16 @@
-﻿using CarsMatter.Infrastructure.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
 {
-    public interface IBrandsRepository
+    public interface IBrandsRepository<T>
     {
-        Task<List<Brand>> GetAllBrands();
+        Task<List<T>> GetAllBrands();
 
-        Task<Brand> AddBrand(Brand brand);
+        Task AddBrand(T brand);
 
-        Task<Brand> UpdateBrand(Brand brand);
+        Task UpdateBrand(T brand);
 
-        Task<bool> DeleteBrand(int brandId);
+        Task DeleteBrand(string brandId);
     }
 }

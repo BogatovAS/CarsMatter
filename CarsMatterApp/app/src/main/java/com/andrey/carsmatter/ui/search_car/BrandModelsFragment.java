@@ -44,8 +44,8 @@ public class BrandModelsFragment extends Fragment {
         new Thread(null, new Runnable() {
             @Override
             public void run() {
-                String brandHttpPath = getArguments().getString("brandHttpPath");
-                brandModels = carsRepository.GetModelsForBrand(brandHttpPath);
+                String brandId = getArguments().getString("brandId");
+                brandModels = carsRepository.GetModelsForBrand(brandId);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -73,7 +73,7 @@ public class BrandModelsFragment extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
                 Bundle params = new Bundle();
-                params.putString("brandModelHttpPath", brandModels.get(i).HttpPath);
+                params.putString("brandModelId", brandModels.get(i).Id);
 
                 navController.navigate(R.id.nav_cars, params);
             }

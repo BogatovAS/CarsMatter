@@ -4,13 +4,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Car {
-    @SerializedName("httpPath")
+    @SerializedName("id")
     @Expose
-    public String HttpPath;
+    public String Id;
 
-    @SerializedName("modelName")
+    @SerializedName("carName")
     @Expose
-    public String ModelName;
+    public String CarName;
 
     @SerializedName("lowPrice")
     @Expose
@@ -30,7 +30,7 @@ public class Car {
 
     @SerializedName("bodyType")
     @Expose
-    public int BodyType;
+    public String BodyType;
 
     @SerializedName("avitoUri")
     @Expose

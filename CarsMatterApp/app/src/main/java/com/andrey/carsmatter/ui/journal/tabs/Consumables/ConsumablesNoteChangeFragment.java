@@ -67,7 +67,7 @@ public class ConsumablesNoteChangeFragment extends Fragment {
 
         try {
             currentConsumablesNote = new ConsumablesNote();
-            currentConsumablesNote.Id = getArguments().getInt("id");
+            currentConsumablesNote.Id = getArguments().getString("id");
             currentConsumablesNote.Date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(getArguments().getString("date"));
             currentConsumablesNote.KindOfService = getArguments().getString("service");
             currentConsumablesNote.Odo = getArguments().getInt("odo");

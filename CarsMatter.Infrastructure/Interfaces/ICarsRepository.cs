@@ -1,17 +1,20 @@
-﻿using CarsMatter.Infrastructure.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
 {
-    public interface ICarsRepository
+    public interface ICarsRepository<T>
     {
-        Task<List<Car>> GetAllCars(int brandModelId);
+        Task<List<T>> GetAllCars(string brandModelId);
 
-        Task<Car> AddCar(Car car);
+        Task<List<T>> GetAllCars();
 
-        Task<Car> UpdateCar(Car car);
+        Task AddCar(T car);
 
-        Task<bool> DeleteCar(int carId);
+        Task UpdateCar(T car);
+
+        Task DeleteCar(string carId);
+
+        Task<string> GetImageForModel(string modelImageHttpPath);
     }
 }

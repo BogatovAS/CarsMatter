@@ -84,7 +84,7 @@ public class SearchCarFragment extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
                 Bundle params = new Bundle();
-                params.putString("brandHttpPath", brands.get(i).HttpPath);
+                params.putString("brandId", brands.get(i).Id);
 
                 navController.navigate(R.id.nav_brand_models, params);
             }

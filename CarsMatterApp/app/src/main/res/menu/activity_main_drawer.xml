@@ -20,10 +20,15 @@
             android:id="@+id/nav_recognize"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_recognize" />
-        <item
-            android:id="@+id/nav_top_auto"
-            android:icon="@drawable/ic_looks_5_black_24dp"
-            android:title="@string/menu_top_auto" />
     </group>
+
+    <item>
+        <menu>
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@drawable/ic_account_circle_black_24dp"
+                android:title="Выход" />
+        </menu>
+    </item>
 
 </menu>

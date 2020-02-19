@@ -1,6 +1,6 @@
 ﻿using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Repository
 {
-    public class FavoriteCarsRepository : IFavoriteCarsRepository
+    public class FavoriteCarsRepository : IFavoriteCarsRepository<Car>
     {
         private readonly CarsMatterDbContext dbContext;
 
@@ -22,7 +22,7 @@ namespace CarsMatter.Infrastructure.Repository
             this.logger = logger;
         }
 
-        public async Task<bool> Add(int userId, int carId)
+        public async Task Add(string userId, string carId)
         {
             FavoriteCar favoriteCarRecord = new FavoriteCar
             {
@@ -31,21 +31,28 @@ namespace CarsMatter.Infrastructure.Repository
             };
 
             this.dbContext.FavoriteCars.Add(favoriteCarRecord);
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async Task<bool> Delete(int favoriteRecordId)
+        public async Task Delete(string userId, string carId)
         {
-            FavoriteCar favoriteCarRecord = this.dbContext.FavoriteCars.FirstOrDefault(fc => fc.Id == favoriteRecordId);
+            FavoriteCar favoriteCarRecord = this.dbContext.FavoriteCars.FirstOrDefault(fc => fc.UserId == userId && fc.CarId == carId);
             this.dbContext.FavoriteCars.Remove(favoriteCarRecord);
 
-            return await this.SaveChanges();
+            await this.SaveChanges();
         }
 
-        public async Task<List<Car>> GetFavoriteCars(int userId) 
+        public async Task<List<Car>> GetFavoriteCars(string userId) 
         {
             var favoriteCars = await Task.Run(() => this.dbContext.FavoriteCars.Where(fc => fc.UserId == userId).Include(fc => fc.Car).ToList());
             return favoriteCars.Select(fc => fc.Car).ToList();
+        }
+
+        public async Task<bool> IsFavoriteCar(string userId, string carId)
+        {
+            FavoriteCar result = await this.dbContext.FavoriteCars.FirstOrDefaultAsync(fc => fc.UserId == userId && fc.CarId == carId);
+
+            return result != null;
         }
 
         private async Task<bool> SaveChanges()

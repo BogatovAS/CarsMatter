@@ -1,5 +1,4 @@
-﻿using CarsMatter.Infrastructure.Models;
-using CarsMatter.Infrastructure.Models.Journal;
+﻿using CarsMatter.Infrastructure.Models.MsSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarsMatter.Infrastructure.Db

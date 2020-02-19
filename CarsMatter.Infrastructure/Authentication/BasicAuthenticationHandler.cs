@@ -46,28 +46,28 @@ namespace CarsMatter.Infrastructure.Authentication
                 this.Request.Headers.Add("Username", username);
 
                 isAuthenticated = await this.userService.Authenticate(username, password);
+
+                if (!isAuthenticated)
+                {
+                    return AuthenticateResult.Fail("Invalid Username or Password");
+                }
+
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, await this.userService.GetUserIdByUsername(username)),
+                    new Claim(ClaimTypes.Name, username)
+                };
+
+                var identity = new ClaimsIdentity(claims, this.Scheme.Name);
+                var principal = new ClaimsPrincipal(identity);
+                var ticket = new AuthenticationTicket(principal, this.Scheme.Name);
+
+                return AuthenticateResult.Success(ticket);
             }
             catch
             {
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
-
-            if (!isAuthenticated)
-            {
-                return AuthenticateResult.Fail("Invalid Username or Password");
-            }
-
-            var claims = new[] 
-            {
-                new Claim(ClaimTypes.NameIdentifier, string.Empty),
-                new Claim(ClaimTypes.Name, string.Empty)
-            };
-
-            var identity = new ClaimsIdentity(claims, this.Scheme.Name);
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, this.Scheme.Name);
-
-            return AuthenticateResult.Success(ticket);
         }
     }
 }

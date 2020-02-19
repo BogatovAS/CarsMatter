@@ -8,7 +8,7 @@ import java.util.Date;
 public class ConsumablesNote {
     @SerializedName("id")
     @Expose
-    public int Id;
+    public String Id;
 
     @SerializedName("date")
     @Expose
