@@ -1,17 +1,17 @@
-﻿using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models.MsSQL;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace CarsMatter.Controllers
+﻿namespace CarsMatter.Controllers
 {
+    using CarsMatter.Infrastructure.Interfaces;
+    using CarsMatter.Infrastructure.Models.MsSQL;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
     [Authorize]
     [Route("api/favorite_cars")]
     [ApiController, Produces("application/json")]

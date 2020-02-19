@@ -85,8 +85,8 @@ namespace CarsMatter.Infrastructure.Helpers
                     Car model = new Car()
                     {
                         CarName = characteristicsElement[0].TextContent,
-                        LowPrice = float.Parse(prices[0]),
-                        HighPrice = float.Parse(prices[1]),
+                        LowPrice = int.Parse(prices[0]),
+                        HighPrice = int.Parse(prices[1]),
                         ManufactureStartDate = dates[0],
                         ManufactureEndDate = dates[1],
                         CarImagePath = carElement.QuerySelector<IHtmlImageElement>("img").Source.Remove(0, 8),

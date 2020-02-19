@@ -1,13 +1,14 @@
-﻿using CarsMatter.Infrastructure.Interfaces;
-using CarsMatter.Infrastructure.Models;
-using CarsMatter.Infrastructure.Models.MsSQL;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-
-namespace CarsMatter.Controllers
+﻿namespace CarsMatter.Controllers
 {
+    using CarsMatter.Infrastructure.Interfaces;
+    using CarsMatter.Infrastructure.Models;
+    using CarsMatter.Infrastructure.Models.MsSQL;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Threading.Tasks;
+
+
     [Route("api/user")]
     [ApiController, Produces("application/json")]
     public class UserController : ControllerBase

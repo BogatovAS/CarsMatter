@@ -6,13 +6,9 @@ namespace CarsMatter
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            var webhost = CreateWebHostBuilder(args).Build();
-
-            //await webhost.InitAsync();
-
-            webhost.Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

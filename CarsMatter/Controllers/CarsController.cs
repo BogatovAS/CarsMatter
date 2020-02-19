@@ -36,8 +36,8 @@
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<Car>>> SearchCars(
             [FromQuery] string carName = null,
-            [FromQuery] float? lowPrice = null,
-            [FromQuery] float? highPrice = null,
+            [FromQuery] int? lowPrice = null,
+            [FromQuery] int? highPrice = null,
             [FromQuery] string manufactureStartDate = null,
             [FromQuery] string manufactureEndDate = null)
         {

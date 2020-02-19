@@ -15,9 +15,9 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string Base64CarImage { get; set; }
 
-        public float LowPrice { get; set; }
+        public int LowPrice { get; set; }
 
-        public float HighPrice { get; set; }
+        public int HighPrice { get; set; }
 
         public string ManufactureStartDate { get; set; }
 

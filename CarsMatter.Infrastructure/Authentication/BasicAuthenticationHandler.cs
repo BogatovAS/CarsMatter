@@ -49,7 +49,7 @@ namespace CarsMatter.Infrastructure.Authentication
 
                 if (!isAuthenticated)
                 {
-                    return AuthenticateResult.Fail("Invalid Username or Password");
+                    return AuthenticateResult.Fail("Неверные имя пользователя или пароль");
                 }
 
                 var claims = new[]
@@ -66,7 +66,7 @@ namespace CarsMatter.Infrastructure.Authentication
             }
             catch
             {
-                return AuthenticateResult.Fail("Invalid Authorization Header");
+                return AuthenticateResult.Fail("Неправильный заголовок авторизации");
             }
         }
     }
