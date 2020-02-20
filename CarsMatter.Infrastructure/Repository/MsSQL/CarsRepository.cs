@@ -89,7 +89,7 @@ namespace CarsMatter.Infrastructure.Repository
         public async Task UpdateCar(Car car)
         {
             EntityEntry<Car> updatedCar;
-            Car existingCar = this.dbContext.Cars.FirstOrDefault(c => c.CarName == car.CarName);
+            Car existingCar = this.dbContext.Cars.FirstOrDefault(c => c.HttpPath == car.HttpPath);
 
             if(existingCar != null)
             {

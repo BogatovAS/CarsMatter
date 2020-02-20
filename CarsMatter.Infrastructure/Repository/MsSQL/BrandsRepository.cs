@@ -43,7 +43,7 @@ namespace CarsMatter.Infrastructure.Repository
         public async Task UpdateBrand(Brand brand)
         {
             EntityEntry<Brand> updatedBrand;
-            Brand existingBrand = this.dbContext.Brands.FirstOrDefault(br => br.BrandName == brand.BrandName);
+            Brand existingBrand = this.dbContext.Brands.FirstOrDefault(br => br.HttpPath == brand.HttpPath);
 
             if (existingBrand != null)
             {

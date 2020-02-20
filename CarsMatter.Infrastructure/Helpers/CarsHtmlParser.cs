@@ -85,6 +85,7 @@ namespace CarsMatter.Infrastructure.Helpers
                     Car model = new Car()
                     {
                         CarName = characteristicsElement[0].TextContent,
+                        HttpPath = characteristicsElement[0].QuerySelector<IHtmlAnchorElement>("a").PathName,
                         LowPrice = int.Parse(prices[0]),
                         HighPrice = int.Parse(prices[1]),
                         ManufactureStartDate = dates[0],

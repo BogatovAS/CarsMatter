@@ -12,6 +12,9 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
         [JsonIgnore]
         public string CarImagePath { get; set; }
 
+        [JsonIgnore]
+        public string HttpPath { get; set; }
+
 
         public string Base64CarImage { get; set; }
 
