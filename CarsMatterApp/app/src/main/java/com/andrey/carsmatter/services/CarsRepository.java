@@ -140,4 +140,15 @@ public class CarsRepository {
         String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(user));
         return Boolean.parseBoolean(responseString);
     }
+
+    public String SignUp(String username, String password) {
+        String url = this.apiUrl + "/user/signUp";
+
+        UserModel user = new UserModel();
+        user.Username = username;
+        user.Password = password;
+
+        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(user));
+        return responseString;
+    }
 }

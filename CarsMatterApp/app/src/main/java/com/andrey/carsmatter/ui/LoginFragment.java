@@ -29,6 +29,7 @@ public class LoginFragment extends Fragment {
     View view;
 
     Handler handler;
+    Handler signUpHandler;
 
 
     @Override
@@ -71,6 +72,24 @@ public class LoginFragment extends Fragment {
                 }
             }
         };
+
+        this.signUpHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                final String signUpResult = msg.getData().getString("signUpResult");
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(signUpResult == "true"){
+                            Toast.makeText(getContext(), "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getContext(), signUpResult, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        };
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +115,24 @@ public class LoginFragment extends Fragment {
                         Message message = new Message();
                         message.setData(args);
                         handler.handleMessage(message);
+                    }
+                }).start();
+            }
+        });
+
+        view.findViewById(R.id.create_an_account).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(null, new Runnable() {
+                    @Override
+                    public void run() {
+                        String result = carsRepository.SignUp(username.getText().toString(), password.getText().toString());
+
+                        Bundle args = new Bundle();
+                        args.putString("signUpResult", result);
+                        Message message = new Message();
+                        message.setData(args);
+                        signUpHandler.handleMessage(message);
                     }
                 }).start();
             }

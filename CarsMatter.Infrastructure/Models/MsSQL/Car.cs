@@ -15,7 +15,7 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
         [JsonIgnore]
         public string HttpPath { get; set; }
 
-
+        [NotMapped]
         public string Base64CarImage { get; set; }
 
         public int LowPrice { get; set; }

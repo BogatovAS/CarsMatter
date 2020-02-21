@@ -44,7 +44,7 @@
         }
 
         [HttpPost("signUp")]
-        public async Task<ActionResult<User>> SignUp([FromBody] UserRequestModel user)
+        public async Task<ActionResult<bool>> SignUp([FromBody] UserRequestModel user)
         {
             User newUser = new User();
             newUser.Username = user.Username;
@@ -52,7 +52,7 @@
             try
             {
                 var createdUser = await this.userService.Create(newUser, user.Password);
-                return this.Ok(createdUser);
+                return this.Ok(createdUser != null);
             }
             catch(Exception e)
             {

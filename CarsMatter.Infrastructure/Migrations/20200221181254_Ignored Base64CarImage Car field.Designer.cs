@@ -4,14 +4,16 @@ using CarsMatter.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarsMatter.Infrastructure.Migrations
 {
     [DbContext(typeof(CarsMatterDbContext))]
-    partial class CarsMatterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200221181254_Ignored Base64CarImage Car field")]
+    partial class IgnoredBase64CarImageCarfield
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
