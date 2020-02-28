@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -82,6 +83,7 @@ public class CarsAdapter extends BaseAdapter {
             Bitmap carImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             ((ImageView) view.findViewById(R.id.car_image)).setImageBitmap(carImage);
         }
+
         ((TextView)view.findViewById(R.id.car_model_name)).setText(this.cars.get(position).CarName);
         ((TextView)view.findViewById(R.id.car_body_type)).setText(this.cars.get(position).BodyType);
         ((TextView)view.findViewById(R.id.car_prices)).setText(this.cars.get(position).LowPrice + " руб - " + this.cars.get(position).HighPrice + " руб");
@@ -90,26 +92,9 @@ public class CarsAdapter extends BaseAdapter {
         if(!this.cars.get(position).ManufactureEndDate.contains("в производстве")){
             manufactureDatesString += " г";
         }
-
         ((TextView)view.findViewById(R.id.car_manufacture_dates)).setText(manufactureDatesString);
 
-        final View finalView = view;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final boolean isFavorite = carsRepository.IsFavoriteCar(cars.get(position).Id);
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFavorite) {
-                            finalView.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                        } else {
-                            finalView.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
-                        }
-                    }});
-            }
-        }).start();
-
+        this.SetFavoriteCarLogoBackground(position, (ImageButton)view.findViewById(R.id.car_add_to_favorite_button));
 
         view.findViewById(R.id.car_avito_uri).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,20 +107,43 @@ public class CarsAdapter extends BaseAdapter {
         view.findViewById(R.id.car_add_to_favorite_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final boolean isFavorite = carsRepository.IsFavoriteCar(cars.get(position).Id);
-                        if (!isFavorite) {
-                            carsRepository.AddCarToFavorite(cars.get(position).Id);
-                        } else {
-                            carsRepository.RemoveCarFromFavorite(cars.get(position).Id);
-                        }
-                    }
-                }).start();
+                AddToFavoriteButtonOnClickListener(position);
             }
         });
 
         return view;
+    }
+
+    private void AddToFavoriteButtonOnClickListener(final int position){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean isFavorite = carsRepository.IsFavoriteCar(cars.get(position).Id);
+                if (!isFavorite) {
+                    carsRepository.AddCarToFavorite(cars.get(position).Id);
+                } else {
+                    carsRepository.RemoveCarFromFavorite(cars.get(position).Id);
+                }
+            }
+        }).start();
+        this.notifyDataSetChanged();
+    }
+
+    private void SetFavoriteCarLogoBackground(final int position, final ImageButton view){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean isFavorite = carsRepository.IsFavoriteCar(cars.get(position).Id);
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isFavorite) {
+                            view.setImageResource(R.drawable.ic_favorite_black_24dp);
+                        } else {
+                            view.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        }
+                    }});
+            }
+        }).start();
     }
 }

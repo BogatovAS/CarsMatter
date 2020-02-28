@@ -35,14 +35,26 @@ public class CarsRepository {
         String url = this.apiUrl + "/refill_notes";
 
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<RefillNote> refillNotes = this.gson.fromJson(responseString,  new TypeToken<ArrayList<RefillNote>>(){}.getType());
+
+        ArrayList<RefillNote> refillNotes = new ArrayList<>();
+
+        if(responseString != null) {
+           refillNotes = this.gson.fromJson(responseString, new TypeToken<ArrayList<RefillNote>>() {}.getType());
+        }
+
         return refillNotes;
     }
 
     public ArrayList<ConsumablesNote> GetAllConsumablesNotes() {
         String url = this.apiUrl + "/consumables_notes";
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<ConsumablesNote> consumablesNotes = this.gson.fromJson(responseString,  new TypeToken<ArrayList<ConsumablesNote>>(){}.getType());
+
+        ArrayList<ConsumablesNote> consumablesNotes = new ArrayList<>();
+
+        if(responseString != null) {
+            this.gson.fromJson(responseString, new TypeToken<ArrayList<ConsumablesNote>>() {}.getType());
+        }
+
         return consumablesNotes;
     }
 
@@ -85,21 +97,39 @@ public class CarsRepository {
     public ArrayList<Brand> GetAllBrands(){
         String url = this.apiUrl + "/cars/brands";
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<Brand> brands = this.gson.fromJson(responseString,  new TypeToken<ArrayList<Brand>>(){}.getType());
+
+        ArrayList<Brand> brands = new ArrayList<>();
+
+        if(responseString != null) {
+           brands = this.gson.fromJson(responseString, new TypeToken<ArrayList<Brand>>() {}.getType());
+        }
+
         return brands;
     }
 
     public ArrayList<BrandModel> GetModelsForBrand(String brandId){
         String url = this.apiUrl + "/cars/brands/" + brandId + "/models";
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<BrandModel> brandModels = this.gson.fromJson(responseString,  new TypeToken<ArrayList<BrandModel>>(){}.getType());
+
+        ArrayList<BrandModel> brandModels = new ArrayList<>();
+
+        if(responseString != null) {
+            brandModels = this.gson.fromJson(responseString, new TypeToken<ArrayList<BrandModel>>() {}.getType());
+        }
+
         return brandModels;
     }
 
     public ArrayList<Car> GetCarsForModel(String modelId){
         String url = this.apiUrl + "/cars/brands/models/" + modelId + "/cars";
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<Car> cars = this.gson.fromJson(responseString,  new TypeToken<ArrayList<Car>>(){}.getType());
+
+        ArrayList<Car> cars = new ArrayList<>();
+
+        if(responseString != null) {
+            cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>() {}.getType());
+        }
+
         return cars;
     }
 
@@ -124,7 +154,26 @@ public class CarsRepository {
     public  ArrayList<Car> GetAllFavoriteCars(){
         String url = this.apiUrl + "/favorite_cars/";
         String responseString = this.httpHandler.getHttpResponse(url);
-        ArrayList<Car> cars = this.gson.fromJson(responseString,  new TypeToken<ArrayList<Car>>(){}.getType());
+
+        ArrayList<Car> cars = new ArrayList<>();
+
+        if(responseString != null) {
+            cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>(){}.getType());
+        }
+
+        return cars;
+    }
+
+    public ArrayList<Car> SearchCars(String searchString){
+        String url = this.apiUrl + "/cars/search" + searchString;
+        String responseString = this.httpHandler.getHttpResponse(url);
+
+        ArrayList<Car> cars = new ArrayList<>();
+
+        if(responseString != null) {
+            cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>() {}.getType());
+        }
+
         return cars;
     }
 

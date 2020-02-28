@@ -12,8 +12,20 @@
         tools:layout="@layout/fragment_login" />
 
     <fragment
-        android:id="@+id/nav_search_auto"
-        android:name="com.andrey.carsmatter.ui.search_car.SearchCarFragment"
+        android:id="@+id/nav_filter"
+        android:name="com.andrey.carsmatter.ui.search_car.FilterFragment"
+        android:label="Вход"
+        tools:layout="@layout/fragment_filter_cars" />
+
+    <fragment
+        android:id="@+id/nav_brands"
+        android:name="com.andrey.carsmatter.ui.search_car.BrandsFragment"
+        android:label="@string/menu_search_auto"
+        tools:layout="@layout/fragment_search_auto" />
+
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.andrey.carsmatter.ui.search_car.SearchFragment"
         android:label="@string/menu_search_auto"
         tools:layout="@layout/fragment_search_auto" />
 
@@ -34,12 +46,6 @@
         android:name="com.andrey.carsmatter.ui.recognize.RecognizeFragment"
         android:label="@string/menu_recognize"
         tools:layout="@layout/fragment_recognize" />
-
-    <fragment
-        android:id="@+id/nav_top_auto"
-        android:name="com.andrey.carsmatter.ui.top_auto.TopAutoFragment"
-        android:label="@string/menu_top_auto"
-        tools:layout="@layout/fragment_top_auto" />
 
     <fragment
         android:id="@+id/nav_refill_change"

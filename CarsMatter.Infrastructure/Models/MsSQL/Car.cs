@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
@@ -32,7 +33,16 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string BrandModelId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("BrandModelId")]
         public BrandModel BrandModel { get; set; }
+
+        [JsonIgnore]
+        public ICollection<UserCar> UsersCars { get; set; }
+
+        public Car()
+        {
+            this.UsersCars = new List<UserCar>();
+        }
     }
 }

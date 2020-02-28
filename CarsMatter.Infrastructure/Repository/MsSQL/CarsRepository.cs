@@ -88,16 +88,24 @@ namespace CarsMatter.Infrastructure.Repository
 
         public async Task UpdateCar(Car car)
         {
-            EntityEntry<Car> updatedCar;
             Car existingCar = this.dbContext.Cars.FirstOrDefault(c => c.HttpPath == car.HttpPath);
 
             if(existingCar != null)
             {
-               updatedCar = this.dbContext.Cars.Update(existingCar);
+                existingCar.LowPrice = car.LowPrice;
+                existingCar.HighPrice = car.HighPrice;
+                existingCar.ManufactureStartDate = car.ManufactureStartDate;
+                existingCar.ManufactureEndDate = car.ManufactureEndDate;
+                existingCar.CarName = car.CarName;
+                existingCar.BodyType = car.BodyType;
+                existingCar.AvitoUri = car.AvitoUri;
+                existingCar.CarImagePath = car.CarImagePath;
+
+                this.dbContext.Cars.Update(existingCar);
             }
             else
             {
-                updatedCar = this.dbContext.Cars.Add(car);
+                 this.dbContext.Cars.Add(car);
             }
             await this.SaveChanges();
         }

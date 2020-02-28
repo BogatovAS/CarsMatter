@@ -17,12 +17,12 @@
     [ApiController, Produces("application/json")]
     public class FavoriteCarsController : ControllerBase
     {
-        private readonly IFavoriteCarsRepository<FavoriteCar> favoriteCarsRepository;
+        private readonly IFavoriteCarsRepository<Car> favoriteCarsRepository;
         private readonly ICarsRepository<Car> carsRepository;
         private readonly ILogger<FavoriteCarsController> logger;
 
         public FavoriteCarsController(
-            IFavoriteCarsRepository<FavoriteCar> favoriteCarsRepository,
+            IFavoriteCarsRepository<Car> favoriteCarsRepository,
             ICarsRepository<Car> carsRepository,
             ILogger<FavoriteCarsController> logger)
         {
@@ -37,7 +37,7 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-                await this.favoriteCarsRepository.Add(carId, userId);
+                await this.favoriteCarsRepository.Add(userId, carId);
                 return Ok(true);
             }
             catch (Exception e)
@@ -53,7 +53,7 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-                await this.favoriteCarsRepository.Delete(carId, userId);
+                await this.favoriteCarsRepository.Delete(userId, carId);
                 return Ok(true);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-                bool response = await this.favoriteCarsRepository.IsFavoriteCar(carId, userId);
+                bool response = await this.favoriteCarsRepository.IsFavoriteCar(userId, carId);
                 return Ok(response);
             }
             catch (Exception e)
@@ -85,16 +85,14 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-                List<FavoriteCar> favoriteCars = await this.favoriteCarsRepository.GetFavoriteCars(userId);
+                List<Car> favoriteCars = await this.favoriteCarsRepository.GetFavoriteCars(userId);
 
-                List<Car> cars = favoriteCars.Select(favoriteCar => favoriteCar.Car).ToList();
-
-                foreach (var car in cars)
+                foreach (var car in favoriteCars)
                 {
                     car.Base64CarImage = await this.carsRepository.GetImageForModel(car.CarImagePath);
                 }
 
-                return Ok(cars);
+                return Ok(favoriteCars);
             }
             catch (Exception e)
             {

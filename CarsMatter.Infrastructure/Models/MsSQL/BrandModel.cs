@@ -14,6 +14,7 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string BrandId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("BrandId")]
         public Brand Brand { get; set; }
     }

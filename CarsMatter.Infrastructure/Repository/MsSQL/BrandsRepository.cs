@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CarsMatter.Infrastructure.Db;
 using CarsMatter.Infrastructure.Interfaces;
 using CarsMatter.Infrastructure.Models.MsSQL;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 
 namespace CarsMatter.Infrastructure.Repository
@@ -42,16 +41,17 @@ namespace CarsMatter.Infrastructure.Repository
 
         public async Task UpdateBrand(Brand brand)
         {
-            EntityEntry<Brand> updatedBrand;
             Brand existingBrand = this.dbContext.Brands.FirstOrDefault(br => br.HttpPath == brand.HttpPath);
 
             if (existingBrand != null)
             {
-                updatedBrand = this.dbContext.Brands.Update(existingBrand);
+                existingBrand.BrandName = brand.BrandName;
+
+                this.dbContext.Brands.Update(existingBrand);
             }
             else
             {
-                updatedBrand = this.dbContext.Brands.Add(brand);
+                this.dbContext.Brands.Add(brand);
             }
             await this.SaveChanges();
         }

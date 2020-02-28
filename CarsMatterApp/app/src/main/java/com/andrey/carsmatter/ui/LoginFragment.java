@@ -1,12 +1,12 @@
 package com.andrey.carsmatter.ui;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,31 +18,49 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.andrey.carsmatter.R;
-import com.andrey.carsmatter.models.BrandModel;
+import com.andrey.carsmatter.models.RememberedAccount;
 import com.andrey.carsmatter.services.CarsRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileInputStream;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 
 public class LoginFragment extends Fragment {
 
     private CarsRepository carsRepository;
 
-    int counter;
-    View view;
+    private int counter;
+    private View view;
 
-    Handler handler;
-    Handler signUpHandler;
+    private Handler handler;
+    private Handler signUpHandler;
+
+    private EditText username;
+    private EditText password;
+    private CheckBox rememberMeCheckbox;
+
+    private String filePath;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        carsRepository = new CarsRepository(getContext());
+        this.carsRepository = new CarsRepository(getContext());
+        this.filePath = getContext().getFilesDir().getAbsolutePath() + File.separator + "creds.json";
 
         this.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 boolean isUserCorrect = msg.getData().getBoolean("isUserCorrect");
 
-                if(!isUserCorrect) {
+                if (!isUserCorrect) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -59,16 +77,23 @@ public class LoginFragment extends Fragment {
                                     }
                                 }, 10000);
                             }
-                        }});
-                }
-                else {
+                        }
+                    });
+                } else {
+                    if(rememberMeCheckbox.isChecked()) {
+                        RememberAccount();
+                    }
+                    else{
+                        DeleteRememberedAccount();
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+                            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                             NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                             navController.navigate(R.id.nav_journal);
-                        }});
+                        }
+                    });
                 }
             }
         };
@@ -80,10 +105,9 @@ public class LoginFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(signUpResult == "true"){
+                        if (signUpResult == "true") {
                             Toast.makeText(getContext(), "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getContext(), signUpResult, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -95,10 +119,19 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
-        final EditText username = view.findViewById(R.id.username);
-        final EditText password = view.findViewById(R.id.password);
+        this.username = view.findViewById(R.id.username);
+        this.password = view.findViewById(R.id.password);
+        this.rememberMeCheckbox = view.findViewById(R.id.remember_me);
+
+        RememberedAccount account = this.GetRememberedAccount();
+
+        if(account != null){
+            this.username.setText(account.Username);
+            this.password.setText(account.Password);
+            this.rememberMeCheckbox.setChecked(true);
+        }
 
         counter = 3;
 
@@ -139,5 +172,69 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void RememberAccount() {
+
+        RememberedAccount account = new RememberedAccount();
+
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.add(Calendar.DATE, 7);
+
+        account.Username = username.getText().toString();
+        account.Password = password.getText().toString();
+        account.Date = currentDate.getTime();
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();
+
+        String accountJson = gson.toJson(account);
+
+        File file = new File(filePath);
+
+        try {
+            file.createNewFile();
+            FileWriter fileWriter = new FileWriter(filePath);
+            fileWriter.write(accountJson);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private RememberedAccount GetRememberedAccount() {
+        File file = new File(filePath);
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .create();
+
+        RememberedAccount account;
+
+        if (file.exists()) {
+            try {
+                InputStream fileReader = new FileInputStream(filePath);
+                byte[] buffer = new byte[fileReader.available()];
+                fileReader.read(buffer);
+                String fileData = new String(buffer, StandardCharsets.UTF_8);
+                account = gson.fromJson(fileData, RememberedAccount.class);
+
+                if(Calendar.getInstance().getTime().getTime() > account.Date.getTime()){
+                    DeleteRememberedAccount();
+                    return null;
+                }
+
+                return account;
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private boolean DeleteRememberedAccount(){
+        File file = new File(filePath);
+        return file.delete();
     }
 }

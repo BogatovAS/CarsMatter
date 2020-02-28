@@ -82,6 +82,8 @@ namespace CarsMatter.Infrastructure.Helpers
 
                     List<string> dates = ParseManufactureDates(characteristicsElement[1].TextContent);
 
+                    string avitoQuery = $"{characteristicsElement[0].TextContent} {dates[0]}-{dates[1]}";
+
                     Car model = new Car()
                     {
                         CarName = characteristicsElement[0].TextContent,
@@ -91,7 +93,7 @@ namespace CarsMatter.Infrastructure.Helpers
                         ManufactureStartDate = dates[0],
                         ManufactureEndDate = dates[1],
                         CarImagePath = carElement.QuerySelector<IHtmlImageElement>("img").Source.Remove(0, 8),
-                        AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={characteristicsElement[0].TextContent}",
+                        AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={avitoQuery}",
                         BodyType = bodyTypeString,
                     };
 

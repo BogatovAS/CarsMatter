@@ -4,14 +4,16 @@ using CarsMatter.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarsMatter.Infrastructure.Migrations
 {
     [DbContext(typeof(CarsMatterDbContext))]
-    partial class CarsMatterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200227213822_Refactored FavoriteCars model")]
+    partial class RefactoredFavoriteCarsmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,6 +109,19 @@ namespace CarsMatter.Infrastructure.Migrations
                     b.ToTable("ConsumablesNotes");
                 });
 
+            modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.FavoriteCar", b =>
+                {
+                    b.Property<string>("CarId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("CarId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteCars");
+                });
+
             modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.RefillNote", b =>
                 {
                     b.Property<string>("Id")
@@ -145,19 +160,6 @@ namespace CarsMatter.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.UserCar", b =>
-                {
-                    b.Property<string>("CarId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("CarId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCar");
-                });
-
             modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.BrandModel", b =>
                 {
                     b.HasOne("CarsMatter.Infrastructure.Models.MsSQL.Brand", "Brand")
@@ -172,15 +174,15 @@ namespace CarsMatter.Infrastructure.Migrations
                         .HasForeignKey("BrandModelId");
                 });
 
-            modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.UserCar", b =>
+            modelBuilder.Entity("CarsMatter.Infrastructure.Models.MsSQL.FavoriteCar", b =>
                 {
                     b.HasOne("CarsMatter.Infrastructure.Models.MsSQL.Car", "Car")
-                        .WithMany("UsersCars")
+                        .WithMany()
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CarsMatter.Infrastructure.Models.MsSQL.User", "User")
-                        .WithMany("UsersCars")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
 {
@@ -12,5 +13,13 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
         public string PasswordHash { get; set; }
 
         public string PasswordSalt { get; set; }
+
+        [JsonIgnore]
+        public ICollection<UserCar> UsersCars { get; set; }
+
+        public User()
+        {
+            this.UsersCars = new List<UserCar>();
+        }
     }
 }

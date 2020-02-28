@@ -43,18 +43,19 @@ namespace CarsMatter.Infrastructure.Repository
             await this.SaveChanges();
         }
 
-        public async  Task UpdateBrandModel(BrandModel brandModel)
+        public async Task UpdateBrandModel(BrandModel brandModel)
         {
-            EntityEntry<BrandModel> updatedBrandModel;
             BrandModel existingBrandModel = this.dbContext.BrandModels.FirstOrDefault(bm => bm.HttpPath == brandModel.HttpPath);
 
             if(existingBrandModel != null)
             {
-                updatedBrandModel = this.dbContext.BrandModels.Update(existingBrandModel);
+                existingBrandModel.ModelName = brandModel.ModelName;
+
+                this.dbContext.BrandModels.Update(existingBrandModel);
             }
             else
             {
-                updatedBrandModel = this.dbContext.BrandModels.Add(brandModel);
+                this.dbContext.BrandModels.Add(brandModel);
             }
             await this.SaveChanges();
         }

@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
 {
-    public class FavoriteCar
+    public class UserCar
     {
-        public string Id { get; set; }
-
+        [Key, ForeignKey("User")]
         public string UserId { get; set; }
 
-        [ForeignKey("UserId")]
         public User User { get; set; }
 
+        [Key, ForeignKey("Car")]
         public string CarId { get; set; }
 
-        [ForeignKey("CarId")]
         public Car Car { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using CarsMatter.Infrastructure.Interfaces;
 using CarsMatter.Infrastructure.Jobs;
 using CarsMatter.Infrastructure.Repository;
 using CarsMatter.Infrastructure.Services;
+using CarsMatter.Infrastructure.Models.MsSQL;
 using Hangfire.MemoryStorage;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication;
@@ -45,10 +46,8 @@ namespace CarsMatter
             // Use a MsSQL database
             var sqlConnectionString = this.configuration.GetSection("CarsMatterConnectionString").Value;
 
-            services.AddEntityFrameworkSqlServer().AddDbContext<CarsMatterDbContext>(options =>
-                options.UseSqlServer(
-                    sqlConnectionString
-                ), ServiceLifetime.Transient, ServiceLifetime.Transient);
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<CarsMatterDbContext>(options => options.UseSqlServer(sqlConnectionString));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -65,12 +64,12 @@ namespace CarsMatter
             services.AddTransient<ICarsService, CarsService>();
             services.AddTransient<IUserService, UserService>();
 
-            services.AddTransient<IBrandsRepository<Infrastructure.Models.MsSQL.Brand>, BrandsRepository>();
-            services.AddTransient<IBrandModelsRepository<Infrastructure.Models.MsSQL.BrandModel>, BrandModelsRepository>();
-            services.AddTransient<ICarsRepository<Infrastructure.Models.MsSQL.Car>, CarsRepository>();
-            services.AddTransient<IFavoriteCarsRepository<Infrastructure.Models.MsSQL.Car>, FavoriteCarsRepository>();
-            services.AddTransient<IRefillNotesRepository<Infrastructure.Models.MsSQL.RefillNote>, RefillNotesRepository>();
-            services.AddTransient<IConsumablesNotesRepository<Infrastructure.Models.MsSQL.ConsumablesNote>, ConsumablesNotesRepository>();
+            services.AddTransient<IBrandsRepository<Brand>, BrandsRepository>();
+            services.AddTransient<IBrandModelsRepository<BrandModel>, BrandModelsRepository>();
+            services.AddTransient<ICarsRepository<Car>, CarsRepository>();
+            services.AddTransient<IFavoriteCarsRepository<Car>, FavoriteCarsRepository>();
+            services.AddTransient<IRefillNotesRepository<RefillNote>, RefillNotesRepository>();
+            services.AddTransient<IConsumablesNotesRepository<ConsumablesNote>, ConsumablesNotesRepository>();
 
             services.AddMemoryCache();
             services.AddCors();

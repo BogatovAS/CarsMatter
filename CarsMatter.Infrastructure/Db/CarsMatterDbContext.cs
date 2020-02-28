@@ -17,11 +17,15 @@ namespace CarsMatter.Infrastructure.Db
 
         public DbSet<Car> Cars { get; set; }
 
-        public DbSet<FavoriteCar> FavoriteCars { get; set; }
-
         public CarsMatterDbContext(DbContextOptions<CarsMatterDbContext> options) : base(options)
         {
             this.Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserCar>()
+                .HasKey(fc => new { fc.CarId, fc.UserId});
         }
     }
 }
