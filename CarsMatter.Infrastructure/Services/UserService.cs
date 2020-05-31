@@ -53,7 +53,7 @@ namespace CarsMatter.Infrastructure.Services
         public async Task<User> Create(User user, string password)
         {
 
-            if (this.dbContext.Users.Where(user => user.Username == user.Username).Any())
+            if (this.dbContext.Users.Where(u => u.Username == user.Username).Any())
             {
                 throw new Exception($"Имя пользователя '{user.Username}' уже занято");
             }

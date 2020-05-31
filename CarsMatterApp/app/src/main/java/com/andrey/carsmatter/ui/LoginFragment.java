@@ -102,10 +102,12 @@ public class LoginFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 final String signUpResult = msg.getData().getString("signUpResult");
+
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (signUpResult == "true") {
+                        if (Boolean.parseBoolean(signUpResult)) {
                             Toast.makeText(getContext(), "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), signUpResult, Toast.LENGTH_SHORT).show();

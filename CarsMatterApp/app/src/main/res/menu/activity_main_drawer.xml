@@ -16,12 +16,7 @@
             android:id="@+id/nav_journal"
             android:icon="@drawable/ic_import_contacts_black_24dp"
             android:title="@string/menu_journal" />
-        <item
-            android:id="@+id/nav_recognize"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_recognize" />
     </group>
-
     <item>
         <menu>
             <item

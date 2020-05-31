@@ -15,7 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class CarsRepository {
@@ -45,6 +47,18 @@ public class CarsRepository {
         return refillNotes;
     }
 
+    public boolean SendNotificationForRefill() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+        String url = this.apiUrl + "/refill_notes/notification?date=" + dateFormat.format(new Date());
+
+        String responseString = this.httpHandler.getHttpResponse(url);
+
+        boolean sendNotification = Boolean.parseBoolean(responseString);
+
+        return sendNotification;
+    }
+
     public ArrayList<ConsumablesNote> GetAllConsumablesNotes() {
         String url = this.apiUrl + "/consumables_notes";
         String responseString = this.httpHandler.getHttpResponse(url);
@@ -52,7 +66,7 @@ public class CarsRepository {
         ArrayList<ConsumablesNote> consumablesNotes = new ArrayList<>();
 
         if(responseString != null) {
-            this.gson.fromJson(responseString, new TypeToken<ArrayList<ConsumablesNote>>() {}.getType());
+            consumablesNotes = this.gson.fromJson(responseString, new TypeToken<ArrayList<ConsumablesNote>>() {}.getType());
         }
 
         return consumablesNotes;

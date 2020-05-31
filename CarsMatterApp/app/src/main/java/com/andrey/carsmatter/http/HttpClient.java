@@ -29,9 +29,7 @@ public class HttpClient {
         Response response;
         try {
             response = httpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,9 +48,7 @@ public class HttpClient {
         Response response;
         try {
             response = httpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,9 +67,7 @@ public class HttpClient {
         Response response;
         try {
             response = httpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,9 +83,7 @@ public class HttpClient {
         Response response;
         try {
             response = httpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
+            return response.body().string();
         }catch (Exception e){
             e.printStackTrace();
         }
