@@ -8,6 +8,7 @@
     using CarsMatter.Infrastructure.Models.MsSQL;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     public class ConsumablesNotesRepository : IConsumablesNotesRepository<ConsumablesNote>
     {
@@ -23,7 +24,17 @@
 
         public async Task<List<ConsumablesNote>> GetAllConsumablesNotes(string userId)
         {
-            return await Task.Run(() => this.dbContext.ConsumablesNotes.Where(note => note.UserId == userId).ToList());
+            return await Task.Run(() =>
+            {
+                var myCars = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId).MyCars;
+
+                return this.dbContext.ConsumablesNotes.Where(note => myCars.Any(myCar => myCar.Id == note.MyCarId)).ToList();
+            });
+        }
+
+        public async Task<List<ConsumablesNote>> GetConsumablesNotesForUserCar(string userId, string userCarId)
+        {
+            return await Task.Run(() => this.dbContext.ConsumablesNotes.Where(note => note.MyCarId == userCarId).ToList());
         }
 
         public async Task AddConsumablesNote(ConsumablesNote consumablesNote)

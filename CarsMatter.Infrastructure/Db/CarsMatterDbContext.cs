@@ -17,6 +17,10 @@ namespace CarsMatter.Infrastructure.Db
 
         public DbSet<Car> Cars { get; set; }
 
+        public DbSet<KindOfService> KindsOfService { get; set; }
+
+        public DbSet<MyCar> MyCars { get; set; }
+
         public CarsMatterDbContext(DbContextOptions<CarsMatterDbContext> options) : base(options)
         {
             this.Database.EnsureCreated();
@@ -26,6 +30,10 @@ namespace CarsMatter.Infrastructure.Db
         {
             modelBuilder.Entity<UserCar>()
                 .HasKey(fc => new { fc.CarId, fc.UserId});
+
+            modelBuilder.Entity<ConsumablesNote>().HasOne(c => c.MyCar);
+            modelBuilder.Entity<ConsumablesNote>().HasOne(c => c.KindOfService);
+            modelBuilder.Entity<RefillNote>().HasOne(c => c.MyCar);
         }
     }
 }

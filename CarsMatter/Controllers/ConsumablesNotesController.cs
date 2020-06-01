@@ -30,14 +30,65 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllConsumablesNotes()
+        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllConsumablesNotes([FromQuery] string userCarId)
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetAllConsumablesNotes(userId);
+                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, userCarId);
                 return Ok(consumablesNotes);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("report")]
+        public async Task<ActionResult<Dictionary<string, ConsumablesNotesReport>>> GetReport([FromQuery] string userCarId = null)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                List<ConsumablesNote> consumablesNotes;
+
+                if (userCarId == null)
+                {
+                    consumablesNotes = await this.consumablesNotesRepository.GetAllConsumablesNotes(userId);
+                }
+                else 
+                {
+                    consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, userCarId);
+                }
+
+                consumablesNotes = consumablesNotes.OrderBy(note => note.Date).ToList();
+
+                Dictionary<string, ConsumablesNotesReport> reportsPerKind = new Dictionary<string, ConsumablesNotesReport>();
+
+                var grpupedConsumablesNotes = consumablesNotes.GroupBy(n => n.KindOfServiceId);
+
+                int totalDays = (consumablesNotes.Last().Date - consumablesNotes.First().Date).Days;
+
+                int totalKms = consumablesNotes.Last().Odo - consumablesNotes.First().Odo;
+
+                foreach (IGrouping<string, ConsumablesNote> group in grpupedConsumablesNotes)
+                {
+                    float totalCost = group.Sum(n => n.Price);
+
+                    ConsumablesNotesReport report = new ConsumablesNotesReport
+                    {
+                        TotalCost = totalCost,
+                        CostPerDay = totalCost / totalDays,
+                        CostPerKm = totalCost / totalKms
+                    };
+
+                    reportsPerKind.Add(group.Key, report);
+                }
+                
+                return Ok(reportsPerKind);
             }
             catch (Exception e)
             {
@@ -52,8 +103,6 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-
-                consumablesNote.UserId = userId;
 
                 await this.consumablesNotesRepository.AddConsumablesNote(consumablesNote);
                 return Ok(true);

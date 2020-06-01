@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
 {
@@ -8,8 +9,6 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public DateTime Date { get; set; }
 
-        public string KindOfService { get; set; }
-
         public float Price { get; set; }
 
         public int Odo { get; set; }
@@ -18,6 +17,12 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string Notes { get; set; }
 
-        public string UserId { get; set; }
+        public string MyCarId { get; set; }
+
+        public MyCar MyCar { get; set; }
+
+        public string KindOfServiceId { get; set; }
+
+        public KindOfService KindOfService { get; set; }
     }
 }

@@ -8,6 +8,7 @@
     using CarsMatter.Infrastructure.Models.MsSQL;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     public class RefillNotesRepository : IRefillNotesRepository<RefillNote>
     {
@@ -23,7 +24,17 @@
 
         public async Task<List<RefillNote>> GetAllRefillNotes(string userId)
         {
-            return await Task.Run(() => this.dbContext.RefillNotes.Where(note => note.UserId == userId).ToList());
+            return await Task.Run(() =>
+            {
+                var myCars = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId).MyCars;
+
+                return this.dbContext.RefillNotes.Where(note => myCars.Any(myCar => myCar.Id == note.MyCarId)).ToList();
+            });
+        }
+
+        public async Task<List<RefillNote>> GetRefillNotesForUserCar(string userId, string userCarId)
+        {
+            return await Task.Run(() => this.dbContext.RefillNotes.Where(note => userCarId == note.MyCarId).ToList());
         }
 
         public async Task AddRefillNote(RefillNote refillNote)

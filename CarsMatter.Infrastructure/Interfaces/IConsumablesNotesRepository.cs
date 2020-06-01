@@ -7,6 +7,8 @@ namespace CarsMatter.Infrastructure.Interfaces
     {
         Task<List<T>> GetAllConsumablesNotes(string userId);
 
+        Task<List<T>> GetConsumablesNotesForUserCar(string userId, string userCarId);
+
         Task AddConsumablesNote(T consumablesNote);
 
         Task UpdateConsumablesNote(T consumablesNote);

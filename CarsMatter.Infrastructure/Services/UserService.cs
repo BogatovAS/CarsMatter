@@ -6,6 +6,7 @@ using CarsMatter.Infrastructure.Models.MsSQL;
 using System.Collections.Generic;
 using System;
 using CarsMatter.Infrastructure.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarsMatter.Infrastructure.Services
 {
@@ -19,6 +20,16 @@ namespace CarsMatter.Infrastructure.Services
         {
             this.dbContext = dbContext;
             this.logger = logger;
+        }
+
+        public async Task<List<MyCar>> GetMyCars(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId);
+
+                return user.MyCars.ToList();
+            });
         }
 
         public async Task<bool> Authenticate(string username, string password)

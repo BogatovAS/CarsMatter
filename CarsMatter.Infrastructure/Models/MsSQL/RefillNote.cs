@@ -14,9 +14,10 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public float Price { get; set; }
 
-        public string UserId { get; set; }
-
         public DateTime Date { get; set; }
 
+        public string MyCarId { get; set; }
+
+        public MyCar MyCar { get; set; }
     }
 }

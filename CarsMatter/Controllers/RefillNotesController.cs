@@ -30,17 +30,17 @@
         }
 
         [HttpGet("notification")]
-        public async Task<ActionResult<bool>> NeedToSendNotification([FromQuery] DateTime date)
+        public async Task<ActionResult<bool>> NeedToSendNotification([FromQuery] DateTime date, [FromQuery] string userCarId)
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<RefillNote> refillNotes = await this.refillNotesRepository.GetAllRefillNotes(userId);
+                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
 
                 DateTime lastRefillNoteCreationDate = refillNotes.OrderByDescending(note => note.Date).FirstOrDefault().Date;
 
-                if(date > lastRefillNoteCreationDate.AddDays(10))
+                if (date > lastRefillNoteCreationDate.AddDays(10))
                 {
                     return Ok(true);
                 }
@@ -59,14 +59,52 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllRefillNotes()
+        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllRefillNotes([FromQuery] string userCarId)
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<RefillNote> refillNotes = await this.refillNotesRepository.GetAllRefillNotes(userId);
+                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
                 return Ok(refillNotes);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("report")]
+        public async Task<ActionResult<RefillNotesReport>> GetReport([FromQuery] string userCarId = null)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                List<RefillNote> refillNotes;
+
+                if (userCarId == null)
+                {
+                    refillNotes = await this.refillNotesRepository.GetAllRefillNotes(userId);
+                }
+                else
+                {
+                    refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
+                }
+
+                refillNotes = refillNotes.OrderBy(note => note.Date).ToList();
+
+                float totalCost = refillNotes.Sum(n => n.Price);
+
+                RefillNotesReport report = new RefillNotesReport
+                {
+                    TotalCost = totalCost,
+                    CostPerDay = totalCost / (refillNotes.Last().Date - refillNotes.First().Date).Days,
+                    CostPerKm = totalCost / refillNotes.Last().Odo - refillNotes.First().Odo
+                };
+
+                return Ok(report);
             }
             catch (Exception e)
             {
@@ -86,8 +124,6 @@
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-
-                refillNote.UserId = userId;
 
                 await this.refillNotesRepository.AddRefillNote(refillNote);
                 return Ok(true);

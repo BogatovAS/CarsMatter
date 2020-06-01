@@ -47,7 +47,7 @@ namespace CarsMatter
             var sqlConnectionString = this.configuration.GetSection("CarsMatterConnectionString").Value;
 
             services.AddEntityFrameworkSqlServer()
-                .AddDbContext<CarsMatterDbContext>(options => options.UseSqlServer(sqlConnectionString));
+                .AddDbContext<CarsMatterDbContext>(options => options.UseSqlServer(sqlConnectionString, b => b.MigrationsAssembly("CarsMatter.Infrastructure")));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
