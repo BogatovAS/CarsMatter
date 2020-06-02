@@ -3,13 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:weightSum="20"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:textSize="30sp"
         android:gravity="center"
+        android:layout_weight="3"
         android:layout_margin="10dp"
         android:textAllCaps="true"
         android:textColor="@color/colorPrimaryDark"
@@ -17,9 +19,10 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
+        android:layout_weight="7"
+        android:layout_height="0dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/login_image"/>
@@ -27,8 +30,9 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginLeft="20dp"
+        android:layout_weight="2"
         android:layout_marginRight="20dp"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"
@@ -43,8 +47,9 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginLeft="20dp"
+        android:layout_weight="2"
         android:layout_marginRight="20dp"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
@@ -63,36 +68,66 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_weight="1"
         android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:text="Запомнить меня"/>
+        android:text="Запомнить меня"
+        android:layout_height="0dp" />
 
     <Button
         android:id="@+id/login_button"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_weight="2"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="Войти"
         android:textSize="20sp"
         android:textColor="@android:color/white"
         android:background="@drawable/button_style"/>
 
-    <Button
-        android:id="@+id/create_an_account"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="      или     " />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/create_an_account"
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="bottom"
         android:text="Создать аккаунт"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:background="@drawable/button_style"/>
+        android:background="@color/colorPrimary"/>
 
 </LinearLayout>

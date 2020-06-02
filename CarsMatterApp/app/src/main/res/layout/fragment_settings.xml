@@ -5,23 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="20">
-
     <ListView
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/consumables_list_view"
+        android:id="@+id/settings_mycars_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="@drawable/road_background"
-        tools:context=".ui.journal.tabs.Refill.RefillTabFragment">
+        tools:context=".ui.settings.SettingsFragment">
     </ListView>
     <Button
-        android:id="@+id/add_consumables_note_button"
+        android:id="@+id/add_user_car"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_weight="18"
-        android:text="Добавить замену"
+        android:text="Добавить автомобиль"
         android:textSize="20sp"
         android:textColor="@android:color/white"
         android:layout_margin="5dp"

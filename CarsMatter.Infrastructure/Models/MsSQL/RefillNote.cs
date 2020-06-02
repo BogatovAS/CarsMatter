@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
 {
@@ -18,6 +19,7 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string MyCarId { get; set; }
 
+        [JsonIgnore]
         public MyCar MyCar { get; set; }
     }
 }

@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/nav_filter"
-        android:name="com.andrey.carsmatter.ui.search_car.FilterFragment"
+        android:name="com.andrey.carsmatter.ui.search_car.CarsFragment"
         android:label="Вход"
-        tools:layout="@layout/fragment_filter_cars" />
+        tools:layout="@layout/fragment_cars" />
 
     <fragment
         android:id="@+id/nav_brands"
@@ -46,6 +46,18 @@
         android:name="com.andrey.carsmatter.ui.recognize.RecognizeFragment"
         android:label="@string/menu_recognize"
         tools:layout="@layout/fragment_recognize" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.andrey.carsmatter.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_usercars_change"
+        android:name="com.andrey.carsmatter.ui.settings.ChangeSettingsFragment"
+        android:label="Мои Автомобили"
+        tools:layout="@layout/fragment_change_user_car" />
 
     <fragment
         android:id="@+id/nav_refill_change"

@@ -20,7 +20,6 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public ICollection<MyCar> MyCars { get; set; }
 
-        [NotMapped]
         public string MySelectedCarId { get; set; }
 
         public User()

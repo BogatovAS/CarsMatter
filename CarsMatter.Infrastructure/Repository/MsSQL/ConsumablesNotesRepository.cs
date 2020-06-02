@@ -32,6 +32,14 @@
             });
         }
 
+        public async Task<List<KindOfService>> GetKindOfServices()
+        {
+            return await Task.Run(() =>
+            {
+                return this.dbContext.KindsOfService.ToList();
+            });
+        }
+
         public async Task<List<ConsumablesNote>> GetConsumablesNotesForUserCar(string userId, string userCarId)
         {
             return await Task.Run(() => this.dbContext.ConsumablesNotes.Where(note => note.MyCarId == userCarId).ToList());

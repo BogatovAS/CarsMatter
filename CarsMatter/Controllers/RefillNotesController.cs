@@ -18,14 +18,16 @@
     public class RefillNotesController : ControllerBase
     {
         private readonly IRefillNotesRepository<RefillNote> refillNotesRepository;
-
+        private readonly IUserService userService;
         private readonly ILogger<RefillNotesController> logger;
 
         public RefillNotesController(
             IRefillNotesRepository<RefillNote> refillNotesRepository,
+            IUserService userService,
             ILogger<RefillNotesController> logger)
         {
             this.refillNotesRepository = refillNotesRepository;
+            this.userService = userService;
             this.logger = logger;
         }
 
@@ -65,7 +67,9 @@
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
                 return Ok(refillNotes);
             }
             catch (Exception e)
@@ -125,6 +129,10 @@
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                refillNote.MyCarId = selectedCar.Id;
+
                 await this.refillNotesRepository.AddRefillNote(refillNote);
                 return Ok(true);
             }
@@ -140,6 +148,12 @@
         {
             try
             {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                refillNote.MyCarId = selectedCar.Id;
+
                 await this.refillNotesRepository.UpdateRefillNote(refillNote);
                 return Ok(true);
             }

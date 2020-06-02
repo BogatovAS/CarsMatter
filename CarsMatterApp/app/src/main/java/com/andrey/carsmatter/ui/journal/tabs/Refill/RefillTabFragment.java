@@ -45,19 +45,14 @@ public class RefillTabFragment extends Fragment {
         dialog = builder.create();
 
         dialog.show();
-        new Thread(null, new Runnable() {
-            @Override
-            public void run() {
-                refillNotes = carsRepository.GetAllRefillNotes();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.clear();
-                        adapter.addRange(refillNotes);
-                        adapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }});
-            }
+        new Thread(null, () -> {
+            refillNotes = carsRepository.GetAllRefillNotes();
+            getActivity().runOnUiThread(() -> {
+                adapter.clear();
+                adapter.addRange(refillNotes);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            });
         }).start();
     }
 

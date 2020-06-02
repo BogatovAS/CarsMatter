@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_favorites,
                 R.id.nav_journal,
                 R.id.nav_search,
-                R.id.nav_recognize)
+                R.id.nav_recognize,
+                R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);

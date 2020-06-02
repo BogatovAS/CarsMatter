@@ -1,6 +1,5 @@
 package com.andrey.carsmatter.services;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,45 +43,43 @@ public class AlarmReceiver extends BroadcastReceiver {
         RememberedAccount account = this.GetRememberedAccount();
 
         if(account != null){
-            User.setCurrentUser(account.Username, account.Password);
+            User.setCurrentUser(account.Username, account.Password, null);
         }
         else{
             return;
         }
 
-        new Thread(null, new Runnable() {
-            @Override
-            public void run() {
-                boolean sendNotificationForRefill = carsRepository.SendNotificationForRefill();
+        new Thread(null, () -> {
+            boolean sendNotificationForRefill = carsRepository.SendNotificationForRefill();
 
-                if (sendNotificationForRefill) {
+            if (sendNotificationForRefill) {
 
-                    Intent notificationIntent = new Intent(context, MainActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                Intent notificationIntent = new Intent(context, MainActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, default_notification_channel_id);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, default_notification_channel_id);
 
-                    mBuilder.setContentTitle("Давайте заправимся");
-                    mBuilder.setContentText("Не забудьте занести данные о вашей последней заправке в приложение");
-                    mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground);
-                    mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_round));
-                    mBuilder.setAutoCancel(true);
-                    mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Не забудьте занести данные о вашей последней заправке в приложение"));
-                    mBuilder.setContentIntent(contentIntent);
+                mBuilder.setContentTitle("Давайте заправимся");
+                mBuilder.setContentText("Не забудьте занести данные о вашей последней заправке в приложение");
+                mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground);
+                mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_round));
+                mBuilder.setAutoCancel(true);
+                mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("Не забудьте занести данные о вашей последней заправке в приложение"));
+                mBuilder.setContentIntent(contentIntent);
 
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        int importance = NotificationManager.IMPORTANCE_HIGH;
-                        NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Статус заправки", importance);
-                        mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
-                        assert mNotificationManager != null;
-                        mNotificationManager.createNotificationChannel(notificationChannel);
-                    }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Статус заправки", importance);
+                    mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
                     assert mNotificationManager != null;
-                    mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
+                    mNotificationManager.createNotificationChannel(notificationChannel);
                 }
-        }}).start();
+                assert mNotificationManager != null;
+                mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
+            }
+    }).start();
     }
 
     private RememberedAccount GetRememberedAccount() {

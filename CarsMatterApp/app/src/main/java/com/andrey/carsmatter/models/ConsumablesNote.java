@@ -16,7 +16,7 @@ public class ConsumablesNote {
 
     @SerializedName("kindOfService")
     @Expose
-    public String KindOfService;
+    public KindOfService KindOfService;
 
     @SerializedName("price")
     @Expose
@@ -33,4 +33,8 @@ public class ConsumablesNote {
     @SerializedName("notes")
     @Expose
     public String Notes;
+
+    @SerializedName("myCarId")
+    @Expose
+    public String MyCarId;
 }

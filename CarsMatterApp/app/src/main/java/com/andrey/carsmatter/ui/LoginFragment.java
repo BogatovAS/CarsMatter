@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import com.andrey.carsmatter.R;
 import com.andrey.carsmatter.models.RememberedAccount;
+import com.andrey.carsmatter.models.User;
 import com.andrey.carsmatter.services.CarsRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -137,41 +138,25 @@ public class LoginFragment extends Fragment {
 
         counter = 3;
 
-        view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                new Thread(null, new Runnable() {
-                    @Override
-                    public void run() {
-                        boolean correctUser = carsRepository.Login(username.getText().toString(), password.getText().toString());
+        view.findViewById(R.id.login_button).setOnClickListener(v -> new Thread(null, () -> {
+            boolean correctUser = carsRepository.Login(username.getText().toString(), password.getText().toString());
 
-                        Bundle args = new Bundle();
-                        args.putBoolean("isUserCorrect", correctUser);
-                        Message message = new Message();
-                        message.setData(args);
-                        handler.handleMessage(message);
-                    }
-                }).start();
-            }
-        });
+            Bundle args = new Bundle();
+            args.putBoolean("isUserCorrect", correctUser);
+            Message message = new Message();
+            message.setData(args);
+            handler.handleMessage(message);
+        }).start());
 
-        view.findViewById(R.id.create_an_account).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Thread(null, new Runnable() {
-                    @Override
-                    public void run() {
-                        String result = carsRepository.SignUp(username.getText().toString(), password.getText().toString());
+        view.findViewById(R.id.create_an_account).setOnClickListener(view -> new Thread(null, () -> {
+            String result = carsRepository.SignUp(username.getText().toString(), password.getText().toString());
 
-                        Bundle args = new Bundle();
-                        args.putString("signUpResult", result);
-                        Message message = new Message();
-                        message.setData(args);
-                        signUpHandler.handleMessage(message);
-                    }
-                }).start();
-            }
-        });
+            Bundle args = new Bundle();
+            args.putString("signUpResult", result);
+            Message message = new Message();
+            message.setData(args);
+            signUpHandler.handleMessage(message);
+        }).start());
 
         return view;
     }
@@ -183,8 +168,8 @@ public class LoginFragment extends Fragment {
         Calendar currentDate = Calendar.getInstance();
         currentDate.add(Calendar.DATE, 7);
 
-        account.Username = username.getText().toString();
-        account.Password = password.getText().toString();
+        account.Username = User.getCurrentUser().Username;
+        account.Password = User.getCurrentUser().Password;
         account.Date = currentDate.getTime();
 
         Gson gson = new GsonBuilder()

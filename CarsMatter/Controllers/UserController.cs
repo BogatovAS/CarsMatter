@@ -3,9 +3,13 @@
     using CarsMatter.Infrastructure.Interfaces;
     using CarsMatter.Infrastructure.Models;
     using CarsMatter.Infrastructure.Models.MsSQL;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
 
@@ -70,6 +74,105 @@
                 return this.Ok();
             }
             catch(Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("cars")]
+        public async Task<ActionResult<List<MyCar>>> GetUserCars()
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                var userCars = await userService.GetMyCars(userId);
+
+                return this.Ok(userCars);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("selectedCar")]
+        public async Task<ActionResult<List<MyCar>>> GetSelectedCar()
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                MyCar selectedCar = await userService.GetSelectedCar(userId);
+
+                return this.Ok(selectedCar);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("selectedCar")]
+        public async Task<ActionResult<List<MyCar>>> SelectCar([FromQuery] string userCarId)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                MyCar selectedCar = await userService.SetSelectedCar(userId, userCarId);
+
+                return this.Ok(selectedCar);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("car")]
+        public async Task<ActionResult<MyCar>> AddUserCar([FromBody] MyCar userCar)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                userCar.UserId = userId;
+
+                MyCar selectedCar = await userService.AddCar(userCar);
+
+                return this.Ok(selectedCar);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("car")]
+        public async Task<ActionResult<MyCar>> UpdateUserCar([FromBody] MyCar userCar)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                userCar.UserId = userId;
+
+                MyCar selectedCar = await userService.UpdateCar(userCar);
+
+                return this.Ok(selectedCar);
+            }
+            catch (Exception e)
             {
                 this.logger.LogError(e, e.Message);
                 return BadRequest(e.Message);

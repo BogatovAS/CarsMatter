@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.andrey.carsmatter.R;
 import com.andrey.carsmatter.adapters.JournalViewPagerAdapter;
 import com.andrey.carsmatter.helpers.KeyboardHelper;
+import com.andrey.carsmatter.models.User;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -37,6 +39,10 @@ public class JournalFragment extends Fragment {
         pager.setAdapter(pagerAdapter);
 
         tabLayout.setupWithViewPager(pager);
+
+        TextView selectedCarTexView = view.findViewById(R.id.journal_selected_car_name);
+
+        selectedCarTexView.setText("Текущий автомобиль: " + User.getCurrentUser().SelectedCar.Name);
 
         return view;
     }

@@ -16,14 +16,13 @@
             android:id="@+id/nav_journal"
             android:icon="@drawable/ic_import_contacts_black_24dp"
             android:title="@string/menu_journal" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/menu_settings" />
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="Выход" />
     </group>
-    <item>
-        <menu>
-            <item
-                android:id="@+id/nav_exit"
-                android:icon="@drawable/ic_account_circle_black_24dp"
-                android:title="Выход" />
-        </menu>
-    </item>
-
 </menu>

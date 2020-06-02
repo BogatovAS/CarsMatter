@@ -60,7 +60,7 @@ public class ConsumablesNotesAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.card_consumables, null);
         }
         ((TextView)view.findViewById(R.id.consumables_date)).setText(new SimpleDateFormat("dd MMM yyyy").format(this.consumablesNotes.get(position).Date));
-        ((TextView)view.findViewById(R.id.consumables_service)).setText(this.consumablesNotes.get(position).KindOfService);
+        ((TextView)view.findViewById(R.id.consumables_service)).setText(this.consumablesNotes.get(position).KindOfService.Name);
         ((TextView)view.findViewById(R.id.consumables_price)).setText(this.consumablesNotes.get(position).Price + " руб");
         ((TextView)view.findViewById(R.id.consumables_odo)).setText(this.consumablesNotes.get(position).Odo + " км");
         ((TextView)view.findViewById(R.id.consumables_location)).setText(this.consumablesNotes.get(position).Location);

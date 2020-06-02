@@ -1,4 +1,5 @@
 ﻿using CarsMatter.Infrastructure.Models.MsSQL;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CarsMatter.Infrastructure.Interfaces
@@ -8,6 +9,16 @@ namespace CarsMatter.Infrastructure.Interfaces
         Task<bool> Authenticate(string username, string password);
 
         Task<string> GetUserIdByUsername(string username);
+
+        Task<List<MyCar>> GetMyCars(string userId);
+
+        Task<MyCar> GetSelectedCar(string userId);
+
+        Task<MyCar> SetSelectedCar(string userId, string myCarId);
+
+        Task<MyCar> AddCar(MyCar car);
+
+        Task<MyCar> UpdateCar(MyCar car);
 
         Task<User> Create(User user, string password);
 

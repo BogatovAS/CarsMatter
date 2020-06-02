@@ -29,4 +29,8 @@ public class RefillNote{
     @SerializedName("date")
     @Expose
     public Date Date;
+
+    @SerializedName("myCarId")
+    @Expose
+    public String MyCarId;
 }

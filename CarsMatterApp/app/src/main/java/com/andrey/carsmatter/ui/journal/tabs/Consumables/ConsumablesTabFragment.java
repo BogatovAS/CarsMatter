@@ -109,7 +109,7 @@ public class ConsumablesTabFragment extends Fragment {
                 params.putString("id", selectedNote.Id);
                 params.putString("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(selectedNote.Date));
                 params.putString("location", selectedNote.Location);
-                params.putString("service", selectedNote.KindOfService);
+                params.putString("service", selectedNote.KindOfService.Id);
                 params.putInt("odo", selectedNote.Odo);
                 params.putFloat("price", selectedNote.Price);
                 params.putString("notes", selectedNote.Notes);
@@ -123,13 +123,10 @@ public class ConsumablesTabFragment extends Fragment {
 
         Button addConsumablesNoteButton = view.findViewById(R.id.add_consumables_note_button);
 
-        addConsumablesNoteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.nav_consumables_change);
-                adapter.notifyDataSetChanged();
-            }
+        addConsumablesNoteButton.setOnClickListener(view1 -> {
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+            navController.navigate(R.id.nav_consumables_change);
+            adapter.notifyDataSetChanged();
         });
 
         return view;

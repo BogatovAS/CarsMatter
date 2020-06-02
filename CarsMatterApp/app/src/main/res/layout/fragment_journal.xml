@@ -16,6 +16,15 @@
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white">
     </com.google.android.material.tabs.TabLayout>
+    <TextView
+        android:id="@+id/journal_selected_car_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:gravity="center">
+    </TextView>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/journal_view_pager"

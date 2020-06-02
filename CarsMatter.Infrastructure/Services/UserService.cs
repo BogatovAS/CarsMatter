@@ -32,6 +32,47 @@ namespace CarsMatter.Infrastructure.Services
             });
         }
 
+        public async Task<MyCar> AddCar(MyCar car)
+        {
+            this.dbContext.MyCars.Add(car);
+
+            await this.SaveChanges();
+
+            return car;
+        }
+
+        public async Task<MyCar> UpdateCar(MyCar car)
+        {
+            this.dbContext.MyCars.Update(car);
+
+            await this.SaveChanges();
+
+            return car;
+        }
+
+        public async Task<MyCar> GetSelectedCar(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId);
+
+                return user.MyCars.FirstOrDefault(car => car.Id == user.MySelectedCarId);
+            });
+        }
+
+        public async Task<MyCar> SetSelectedCar(string userId, string myCarId)
+        {
+            var user = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId);
+
+            user.MySelectedCarId = myCarId;
+
+            this.dbContext.Users.Update(user);
+
+            await this.SaveChanges();
+
+            return user.MyCars.FirstOrDefault(car => car.Id == user.MySelectedCarId);
+        }
+
         public async Task<bool> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
@@ -133,6 +174,20 @@ namespace CarsMatter.Infrastructure.Services
             }
 
             return true;
+        }
+
+        private async Task<bool> SaveChanges()
+        {
+            try
+            {
+                await this.dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                throw;
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ public class User {
 
     public String Username;
     public String Password;
+    public MyCar SelectedCar;
 
     public static User getCurrentUser(){
         if(currentUser == null){
@@ -13,9 +14,10 @@ public class User {
         return currentUser;
     }
 
-    public static void setCurrentUser(String username, String password){
+    public static void setCurrentUser(String username, String password, MyCar selectedCar){
         currentUser = new User();
         currentUser.Username = username;
         currentUser.Password = password;
+        currentUser.SelectedCar = selectedCar;
     }
 }

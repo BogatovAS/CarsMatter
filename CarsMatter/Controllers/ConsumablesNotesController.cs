@@ -18,26 +18,46 @@
     public class ConsumablesNotesController : ControllerBase
     {
         private readonly IConsumablesNotesRepository<ConsumablesNote> consumablesNotesRepository;
+        private readonly IUserService userService;
 
         private readonly ILogger<ConsumablesNotesController> logger;
 
         public ConsumablesNotesController(
-            IConsumablesNotesRepository<ConsumablesNote> consumablesNotesRepository, 
+            IConsumablesNotesRepository<ConsumablesNote> consumablesNotesRepository,
+            IUserService userService,
             ILogger<ConsumablesNotesController> logger)
         {
             this.consumablesNotesRepository = consumablesNotesRepository;
+            this.userService = userService;
             this.logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllConsumablesNotes([FromQuery] string userCarId)
+        public async Task<ActionResult<IEnumerable<RefillNote>>> GetAllConsumablesNotes()
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, userCarId);
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, selectedCar.Id);
                 return Ok(consumablesNotes);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("kindOfServices")]
+        public async Task<ActionResult<IEnumerable<KindOfService>>> GetKindOfServices()
+        {
+            try
+            {
+                List<KindOfService> kindOfServices = await this.consumablesNotesRepository.GetKindOfServices();
+                return Ok(kindOfServices);
             }
             catch (Exception e)
             {
@@ -104,6 +124,10 @@
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                consumablesNote.MyCarId = selectedCar.Id;
+
                 await this.consumablesNotesRepository.AddConsumablesNote(consumablesNote);
                 return Ok(true);
             }
@@ -119,6 +143,12 @@
         {
             try
             {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                consumablesNote.MyCarId = selectedCar.Id;
+
                 await this.consumablesNotesRepository.UpdateConsumablesNote(consumablesNote);
                 return Ok(true);
             }

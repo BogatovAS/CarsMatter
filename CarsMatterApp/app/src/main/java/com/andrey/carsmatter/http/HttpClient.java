@@ -17,6 +17,24 @@ public class HttpClient {
 
     private OkHttpClient httpClient = new OkHttpClient();
 
+    public String loginRequest(String url, String requestJson) {
+        final MediaType mediaType = MediaType.parse("application/json");
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create(mediaType, requestJson))
+                .build();
+        Response response;
+        try {
+            response = httpClient.newCall(request).execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public String postHttpRequest(String url, String requestJson) {
         this.AuthorizationHeaderValue = Credentials.basic((User.getCurrentUser().Username), User.getCurrentUser().Password);
         final MediaType mediaType = MediaType.parse("application/json");

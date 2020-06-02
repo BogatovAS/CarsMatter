@@ -72,11 +72,10 @@
                 android:layout_width="0dp"
                 android:layout_weight="9"
                 android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
+                <Spinner
                     android:id="@+id/consumables_service_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="textShortMessage"
                     android:textColor="@color/colorPrimaryDark"
                     android:hint="Сервис"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -210,10 +209,6 @@
     </LinearLayout>
     <Button
         android:id="@+id/apply_consumables_change_button"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -221,5 +216,6 @@
         android:text="Применить"
         android:textSize="20sp"
         android:textColor="@android:color/white"
+        android:layout_margin="5dp"
         android:background="@drawable/button_style"/>
 </LinearLayout>

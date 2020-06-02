@@ -8,6 +8,8 @@ import com.andrey.carsmatter.models.Brand;
 import com.andrey.carsmatter.models.BrandModel;
 import com.andrey.carsmatter.models.Car;
 import com.andrey.carsmatter.models.ConsumablesNote;
+import com.andrey.carsmatter.models.KindOfService;
+import com.andrey.carsmatter.models.MyCar;
 import com.andrey.carsmatter.models.RefillNote;
 import com.andrey.carsmatter.models.User;
 import com.andrey.carsmatter.models.UserModel;
@@ -40,7 +42,7 @@ public class CarsRepository {
 
         ArrayList<RefillNote> refillNotes = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
            refillNotes = this.gson.fromJson(responseString, new TypeToken<ArrayList<RefillNote>>() {}.getType());
         }
 
@@ -65,11 +67,56 @@ public class CarsRepository {
 
         ArrayList<ConsumablesNote> consumablesNotes = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
             consumablesNotes = this.gson.fromJson(responseString, new TypeToken<ArrayList<ConsumablesNote>>() {}.getType());
         }
 
         return consumablesNotes;
+    }
+
+    public MyCar GetSelectedUserCar() {
+
+        String url = this.apiUrl + "/user/selectedCar";
+
+        String responseString = this.httpHandler.getHttpResponse(url);
+
+        MyCar selectedCar = new MyCar();
+
+        if(responseString != null && !responseString.isEmpty()) {
+            selectedCar = this.gson.fromJson(responseString, MyCar.class);
+        }
+
+        return selectedCar;
+    }
+
+    public ArrayList<MyCar> GetUserCars() {
+        String url = this.apiUrl + "/user/cars";
+
+        String responseString = this.httpHandler.getHttpResponse(url);
+
+        return this.gson.fromJson(responseString, new TypeToken<ArrayList<MyCar>>() {}.getType());
+    }
+
+    public ArrayList<KindOfService> GetKindOfServices() {
+        String url = this.apiUrl + "/consumables_notes/kindOfServices";
+
+        String responseString = this.httpHandler.getHttpResponse(url);
+
+        return this.gson.fromJson(responseString, new TypeToken<ArrayList<MyCar>>() {}.getType());
+    }
+
+    public boolean SetSelectedUserCar(String userCarId) {
+        String url = this.apiUrl + "/user/selectedCar/?userCarId=" + userCarId;
+
+        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(""));
+
+        if(responseString != null && !responseString.isEmpty()) {
+            User.getCurrentUser().SelectedCar = this.gson.fromJson(responseString, MyCar.class);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public boolean AddRefillNote(RefillNote refillNote) {
@@ -96,7 +143,7 @@ public class CarsRepository {
         return Boolean.parseBoolean(responseString);
     }
 
-    public boolean UpdateConsumablesNote(ConsumablesNote consumablesNote){
+    public boolean UpdateConsumablesNote(ConsumablesNote consumablesNote) {
         String url = this.apiUrl + "/consumables_notes";
         String responseString = this.httpHandler.putHttpRequest(url, this.gson.toJson(consumablesNote));
         return Boolean.parseBoolean(responseString);
@@ -114,7 +161,7 @@ public class CarsRepository {
 
         ArrayList<Brand> brands = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
            brands = this.gson.fromJson(responseString, new TypeToken<ArrayList<Brand>>() {}.getType());
         }
 
@@ -127,7 +174,7 @@ public class CarsRepository {
 
         ArrayList<BrandModel> brandModels = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
             brandModels = this.gson.fromJson(responseString, new TypeToken<ArrayList<BrandModel>>() {}.getType());
         }
 
@@ -140,7 +187,7 @@ public class CarsRepository {
 
         ArrayList<Car> cars = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
             cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>() {}.getType());
         }
 
@@ -171,7 +218,7 @@ public class CarsRepository {
 
         ArrayList<Car> cars = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
             cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>(){}.getType());
         }
 
@@ -184,7 +231,7 @@ public class CarsRepository {
 
         ArrayList<Car> cars = new ArrayList<>();
 
-        if(responseString != null) {
+        if(responseString != null && !responseString.isEmpty()) {
             cars = this.gson.fromJson(responseString, new TypeToken<ArrayList<Car>>() {}.getType());
         }
 
@@ -194,13 +241,17 @@ public class CarsRepository {
     public boolean Login(String username, String password) {
         String url = this.apiUrl + "/user/logIn";
 
-        User.setCurrentUser(username, password);
-
         UserModel user = new UserModel();
         user.Username = User.getCurrentUser().Username;
         user.Password = User.getCurrentUser().Password;
 
-        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(user));
+        String responseString = this.httpHandler.loginRequest(url, this.gson.toJson(user));
+
+        if(Boolean.parseBoolean(responseString)){
+            MyCar selectedCar = GetSelectedUserCar();
+            User.setCurrentUser(username, password, selectedCar);
+        }
+
         return Boolean.parseBoolean(responseString);
     }
 
@@ -211,7 +262,27 @@ public class CarsRepository {
         user.Username = username;
         user.Password = password;
 
-        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(user));
+        String responseString = this.httpHandler.loginRequest(url, this.gson.toJson(user));
         return responseString;
+    }
+
+    public boolean AddUserCar(MyCar userCar) {
+        String url = this.apiUrl + "/user/car";
+        String responseString = this.httpHandler.postHttpRequest(url, this.gson.toJson(userCar));
+
+        if(responseString != null && !responseString.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean UpdateUserCar(MyCar userCar) {
+        String url = this.apiUrl + "/user/car";
+        String responseString = this.httpHandler.putHttpRequest(url, this.gson.toJson(userCar));
+
+        if(responseString != null && !responseString.isEmpty()){
+            return true;
+        }
+        return false;
     }
 }
