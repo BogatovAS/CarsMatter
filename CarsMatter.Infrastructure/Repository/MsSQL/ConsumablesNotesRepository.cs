@@ -28,7 +28,7 @@
             {
                 var myCars = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId).MyCars;
 
-                return this.dbContext.ConsumablesNotes.Where(note => myCars.Any(myCar => myCar.Id == note.MyCarId)).ToList();
+                return this.dbContext.ConsumablesNotes.Include(u => u.KindOfService).Where(note => myCars.Any(myCar => myCar.Id == note.MyCarId)).ToList();
             });
         }
 
@@ -42,7 +42,7 @@
 
         public async Task<List<ConsumablesNote>> GetConsumablesNotesForUserCar(string userId, string userCarId)
         {
-            return await Task.Run(() => this.dbContext.ConsumablesNotes.Where(note => note.MyCarId == userCarId).ToList());
+            return await Task.Run(() => this.dbContext.ConsumablesNotes.Include(u => u.KindOfService).Where(note => note.MyCarId == userCarId).ToList());
         }
 
         public async Task AddConsumablesNote(ConsumablesNote consumablesNote)
@@ -53,8 +53,22 @@
 
         public async Task UpdateConsumablesNote(ConsumablesNote consumablesNote)
         {
-            this.dbContext.ConsumablesNotes.Update(consumablesNote);
-            await this.SaveChanges();
+            var existingNote = this.dbContext.ConsumablesNotes.FirstOrDefault(note => note.Id == consumablesNote.Id);
+
+            if (existingNote != null)
+            {
+                existingNote.KindOfServiceId = consumablesNote.KindOfServiceId;
+                existingNote.Date = consumablesNote.Date;
+                existingNote.Location = consumablesNote.Location;
+                existingNote.MyCarId = consumablesNote.MyCarId;
+                existingNote.Notes = consumablesNote.Notes;
+                existingNote.Odo = consumablesNote.Odo;
+                existingNote.Price = consumablesNote.Price;
+
+                this.dbContext.ConsumablesNotes.Update(existingNote);
+
+                await this.SaveChanges();
+            }
         }
 
         public async Task DeleteConsumablesNote(string consumablesNoteId)

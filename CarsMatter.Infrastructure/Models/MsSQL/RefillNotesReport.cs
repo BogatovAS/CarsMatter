@@ -9,5 +9,7 @@
         public float CostPerKm { get; set; }
 
         public float TotalVolume { get; set; }
+
+        public float AverageVolume { get; set; }
     }
 }

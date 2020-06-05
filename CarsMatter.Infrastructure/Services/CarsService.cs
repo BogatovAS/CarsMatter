@@ -11,13 +11,13 @@ namespace CarsMatter.Infrastructure.Services
 {
     public class CarsService : ICarsService
     {
-        private readonly HttpClient httpClient;
-
         private readonly ILogger<CarsService> logger;
+
+        private IHttpClientFactory httpClientFactory;
 
         public CarsService(IHttpClientFactory httpClientFactory, ILogger<CarsService> logger)
         {
-            this.httpClient = httpClientFactory.CreateClient("avtomarket");
+            this.httpClientFactory = httpClientFactory;
             this.logger = logger;
         }
 
@@ -25,8 +25,13 @@ namespace CarsMatter.Infrastructure.Services
         {
             List<Brand> brands = new List<Brand>();
 
-            HttpResponseMessage response = await this.httpClient.GetAsync("catalog/");
-            string htmlDocument = await response.Content.ReadAsStringAsync();
+            string htmlDocument;
+
+            using (HttpClient httpClient = httpClientFactory.CreateClient("avtomarket"))
+            {
+                HttpResponseMessage response = await httpClient.GetAsync("catalog/");
+                htmlDocument = await response.Content.ReadAsStringAsync();
+            }
 
             try
             {
@@ -44,8 +49,13 @@ namespace CarsMatter.Infrastructure.Services
         {
             List<BrandModel> brandModels = new List<BrandModel>();
 
-            HttpResponseMessage response = await this.httpClient.GetAsync(brandHttpPath);
-            string htmlDocument = await response.Content.ReadAsStringAsync();
+            string htmlDocument;
+
+            using (HttpClient httpClient = httpClientFactory.CreateClient("avtomarket"))
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(brandHttpPath);
+                htmlDocument = await response.Content.ReadAsStringAsync();
+            }
 
             try
             {
@@ -63,8 +73,13 @@ namespace CarsMatter.Infrastructure.Services
         {
             List<Car> cars = new List<Car>();
 
-            HttpResponseMessage response = await this.httpClient.GetAsync(carModelHttpPath);
-            string htmlDocument = await response.Content.ReadAsStringAsync();
+            string htmlDocument;
+
+            using (HttpClient httpClient = httpClientFactory.CreateClient("avtomarket"))
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(carModelHttpPath);
+                htmlDocument = await response.Content.ReadAsStringAsync();
+            }
 
             try
             {

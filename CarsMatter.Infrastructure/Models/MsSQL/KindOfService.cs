@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace CarsMatter.Infrastructure.Models.MsSQL
 {
@@ -8,6 +9,7 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
 
         public string Name { get; set; }
 
+        [JsonIgnore]
         public ICollection<ConsumablesNote> ConsumablesNotes { get; set; }
 
         public KindOfService()

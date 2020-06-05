@@ -38,7 +38,9 @@
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
+                List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
 
                 DateTime lastRefillNoteCreationDate = refillNotes.OrderByDescending(note => note.Date).FirstOrDefault().Date;
 
@@ -70,7 +72,7 @@
                 MyCar selectedCar = await this.userService.GetSelectedCar(userId);
 
                 List<RefillNote> refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
-                return Ok(refillNotes);
+                return Ok(refillNotes.OrderByDescending(note => note.Date));
             }
             catch (Exception e)
             {
@@ -101,11 +103,16 @@
 
                 float totalCost = refillNotes.Sum(n => n.Price);
 
+                var totalPetrol = refillNotes.Sum(n => n.Petrol);
+                var averagePetrol = totalPetrol / (refillNotes.Last().Odo - refillNotes.First().Odo) * 100;
+
                 RefillNotesReport report = new RefillNotesReport
                 {
                     TotalCost = totalCost,
                     CostPerDay = totalCost / (refillNotes.Last().Date - refillNotes.First().Date).Days,
-                    CostPerKm = totalCost / refillNotes.Last().Odo - refillNotes.First().Odo
+                    CostPerKm = totalCost / (refillNotes.Last().Odo - refillNotes.First().Odo),
+                    TotalVolume = totalPetrol,
+                    AverageVolume = averagePetrol
                 };
 
                 return Ok(report);
@@ -133,6 +140,14 @@
 
                 refillNote.MyCarId = selectedCar.Id;
 
+                var allNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
+                allNotes = allNotes.OrderByDescending(note => note.Date).ToList();
+
+                if (allNotes.Any() && allNotes.First().Odo > refillNote.Odo && allNotes.First().Date < refillNote.Date)
+                {
+                    return this.BadRequest("Текущий пробег не может быть меньше пробега в последней записи");
+                }
+
                 await this.refillNotesRepository.AddRefillNote(refillNote);
                 return Ok(true);
             }
@@ -153,6 +168,24 @@
                 MyCar selectedCar = await this.userService.GetSelectedCar(userId);
 
                 refillNote.MyCarId = selectedCar.Id;
+
+                var allNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
+                allNotes = allNotes.OrderByDescending(note => note.Date).ToList();
+
+                if (allNotes.Any() && refillNote.Date > allNotes.First().Date)
+                {
+                    if (refillNote.Odo < allNotes.First().Odo)
+                    {
+                        return this.BadRequest("Текущий пробег не может быть меньше пробега в последней записи");
+                    }
+                }
+                if (allNotes.Any() && refillNote.Odo > allNotes.First().Odo)
+                {
+                    if (refillNote.Date < allNotes.First().Date)
+                    {
+                        return this.BadRequest("Дата текущей заправки не может быть меньше даты в последней записи");
+                    }
+                }
 
                 await this.refillNotesRepository.UpdateRefillNote(refillNote);
                 return Ok(true);

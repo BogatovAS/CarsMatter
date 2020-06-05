@@ -75,24 +75,27 @@ namespace CarsMatter.Infrastructure.Services
 
         public async Task<bool> Authenticate(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            return await Task.Run(() =>
             {
-                throw new ArgumentException("Поле 'Пароль' и 'Имя пользоватея' должно быть заполнено");
-            }
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    throw new ArgumentException("Поле 'Пароль' и 'Имя пользоватея' должно быть заполнено");
+                }
 
-            var user = this.dbContext.Users.Where(user => user.Username == username).FirstOrDefault();
+                var user = this.dbContext.Users.Where(user => user.Username == username).FirstOrDefault();
 
-            if (user == null)
-            {
-                throw new Exception($"Пользоатель с таким именем не найден: '{user.Username}'");
-            }
+                if (user == null)
+                {
+                    throw new Exception($"Пользоатель с таким именем не найден: '{user.Username}'");
+                }
 
-            if (!VerifyPasswordHash(password, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.PasswordSalt)))
-            {
-                return false;
-            }
+                if (!VerifyPasswordHash(password, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.PasswordSalt)))
+                {
+                    return false;
+                }
 
-            return true;
+                return true;
+            });
         }
 
         public async Task<string> GetUserIdByUsername(string username)

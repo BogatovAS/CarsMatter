@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -58,6 +59,9 @@ public class ConsumablesNoteChangeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.carsRepository = new CarsRepository(getContext());
 
+        this.adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         new Thread(null, () -> {
             kindsOfServices = carsRepository.GetKindOfServices();
 
@@ -67,8 +71,18 @@ public class ConsumablesNoteChangeFragment extends Fragment {
                 kindOfServiceNames.add(kindOfService.Name);
             }
 
-            this.adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, kindsOfServices);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            getActivity().runOnUiThread(() -> {
+                adapter.clear();
+                adapter.addAll(kindOfServiceNames);
+
+                if(getArguments() != null) {
+                    serviceEditSelect.setSelection(kindsOfServices.indexOf(kindsOfServices.stream().filter(kind -> kind.Id.equals(getArguments().getString("service"))).findFirst().orElse(kindsOfServices.get(0))));
+                }
+                else{
+                    serviceEditSelect.setSelection(0);
+                }
+                adapter.notifyDataSetChanged();
+            });
         }).start();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -95,7 +109,6 @@ public class ConsumablesNoteChangeFragment extends Fragment {
             currentConsumablesNote = new ConsumablesNote();
             currentConsumablesNote.Id = getArguments().getString("id");
             currentConsumablesNote.Date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(getArguments().getString("date"));
-            currentConsumablesNote.KindOfService = kindsOfServices.stream().filter(kind -> kind.Id == getArguments().get("service")).findFirst().orElse(kindsOfServices.get(0));
             currentConsumablesNote.Odo = getArguments().getInt("odo");
             currentConsumablesNote.Price = getArguments().getFloat("price");
             currentConsumablesNote.Location = getArguments().getString("location");
@@ -113,7 +126,6 @@ public class ConsumablesNoteChangeFragment extends Fragment {
 
             dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(currentConsumablesNote.Date));
             timeView.setText(new SimpleDateFormat("HH:mm").format(currentConsumablesNote.Date));
-            serviceEditSelect.setSelection(kindsOfServices.indexOf(currentConsumablesNote.KindOfService));
             servicePriceEditText.setText(Float.toString(currentConsumablesNote.Price));
             odoEditText.setText(Long.toString(currentConsumablesNote.Odo));
             locationEditText.setText(currentConsumablesNote.Location);
@@ -121,76 +133,72 @@ public class ConsumablesNoteChangeFragment extends Fragment {
         }
         Button applyConsumablesChangeButton = view.findViewById(R.id.apply_consumables_change_button);
 
-        applyConsumablesChangeButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        serviceEditSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                final boolean isNewNote = currentConsumablesNote == null;
-
-                if(isNewNote){
-                    currentConsumablesNote = new ConsumablesNote();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(currentConsumablesNote != null) {
+                    currentConsumablesNote.KindOfServiceId = kindsOfServices.get(i).Id;
                 }
-
-                currentConsumablesNote.Location = locationEditText.getText().toString();
-                currentConsumablesNote.KindOfService = kindsOfServices.stream().filter(kind -> kind.Id == serviceEditSelect.getAutofillValue().toString()).findFirst().orElse(kindsOfServices.get(0));
-                currentConsumablesNote.Odo = Integer.parseInt(odoEditText.getText().toString());
-                currentConsumablesNote.Price = Float.parseFloat(servicePriceEditText.getText().toString());
-                currentConsumablesNote.Notes = notesEditText.getText().toString();
-                currentConsumablesNote.Date = calendar.getTime();
-
-                dialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isNewNote) {
-                            carsRepository.AddConsumablesNote(currentConsumablesNote);
-                        } else {
-                            carsRepository.UpdateConsumablesNote(currentConsumablesNote);
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                                navController.navigate(R.id.nav_journal);
-                            }});
-                    }}).start();
             }
-        });
 
-       dateView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker datePickerView, int year, int monthOfYear, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
-                    }
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-                .show();
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
-        timeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    public void onTimeSet(TimePicker timePickerView, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
-                    }
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE), true)
-                .show();
+        applyConsumablesChangeButton.setOnClickListener(view13 -> {
+            final boolean isNewNote = currentConsumablesNote == null;
+
+            if(isNewNote){
+                currentConsumablesNote = new ConsumablesNote();
             }
+
+            currentConsumablesNote.Location = locationEditText.getText().toString();
+            currentConsumablesNote.Odo = Integer.parseInt(odoEditText.getText().toString());
+            currentConsumablesNote.Price = Float.parseFloat(servicePriceEditText.getText().toString());
+            currentConsumablesNote.Notes = notesEditText.getText().toString();
+            currentConsumablesNote.Date = calendar.getTime();
+            currentConsumablesNote.KindOfServiceId = kindsOfServices.get(serviceEditSelect.getSelectedItemPosition()).Id;
+
+            dialog.show();
+            new Thread(() -> {
+                if (isNewNote) {
+                    carsRepository.AddConsumablesNote(currentConsumablesNote);
+                } else {
+                    carsRepository.UpdateConsumablesNote(currentConsumablesNote);
+                }
+                getActivity().runOnUiThread(() -> {
+                    dialog.dismiss();
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+
+                    Bundle params = new Bundle();
+                    params.putInt("tabNumber", 2);
+
+                    navController.navigate(R.id.nav_journal, params);
+                });
+            }).start();
         });
+
+       dateView.setOnClickListener(view1 -> new DatePickerDialog(getContext(), (datePickerView, year, monthOfYear, dayOfMonth) -> {
+           calendar.set(Calendar.YEAR, year);
+           calendar.set(Calendar.MONTH, monthOfYear);
+           calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+           dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
+       },
+       calendar.get(Calendar.YEAR),
+       calendar.get(Calendar.MONTH),
+       calendar.get(Calendar.DAY_OF_MONTH))
+       .show());
+
+        timeView.setOnClickListener(view12 -> new TimePickerDialog(getContext(), (timePickerView, hourOfDay, minute) -> {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
+        },
+        calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE), true)
+        .show());
 
         return view;
     }

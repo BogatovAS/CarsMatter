@@ -44,6 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if(account != null){
             User.setCurrentUser(account.Username, account.Password, null);
+            User.getCurrentUser().SelectedCar = carsRepository.GetSelectedUserCar();
         }
         else{
             return;

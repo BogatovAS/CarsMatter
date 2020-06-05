@@ -54,6 +54,12 @@
         tools:layout="@layout/fragment_settings" />
 
     <fragment
+        android:id="@+id/nav_statistics"
+        android:name="com.andrey.carsmatter.ui.statistics.StatisticsFragment"
+        android:label="@string/menu_statistics"
+        tools:layout="@layout/fragment_statistics" />
+
+    <fragment
         android:id="@+id/nav_usercars_change"
         android:name="com.andrey.carsmatter.ui.settings.ChangeSettingsFragment"
         android:label="Мои Автомобили"

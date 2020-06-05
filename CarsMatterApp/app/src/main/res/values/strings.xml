@@ -16,6 +16,7 @@
     <string name="menu_refill">Заправка</string>
     <string name="menu_brand_models">Модели бренда</string>
     <string name="menu_settings">Настройки</string>
+    <string name="menu_statistics">Статистика</string>
 
     <string name="api_base_path">https://carsmatterapp.azurewebsites.net/api</string>
     <string name="menu_cars">Модели машин</string>

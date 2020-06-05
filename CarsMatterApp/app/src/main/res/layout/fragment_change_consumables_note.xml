@@ -55,7 +55,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_margin="10dp"
             android:orientation="horizontal">
@@ -68,17 +68,13 @@
                 android:background="@drawable/ic_service_black_24dp"
                 android:tint="@color/colorPrimaryDark" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_weight="9"
-                android:layout_height="wrap_content">
                 <Spinner
                     android:id="@+id/consumables_service_edit"
+                    android:layout_weight="9"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/colorPrimaryDark"
                     android:hint="Сервис"/>
-            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout

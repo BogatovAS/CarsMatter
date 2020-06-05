@@ -82,7 +82,7 @@ namespace CarsMatter.Infrastructure.Helpers
 
                     List<string> dates = ParseManufactureDates(characteristicsElement[1].TextContent);
 
-                    string avitoQuery = $"{characteristicsElement[0].TextContent} {dates[0]}-{dates[1]}";
+                    string avitoQuery = $"{characteristicsElement[0].TextContent} {dates[0]}";
 
                     Car model = new Car()
                     {

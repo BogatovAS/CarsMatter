@@ -92,7 +92,7 @@
                     car.Base64CarImage = await this.carsRepository.GetImageForModel(car.CarImagePath);
                 }
 
-                return Ok(favoriteCars);
+                return Ok(favoriteCars.OrderByDescending(car => car.Id));
             }
             catch (Exception e)
             {

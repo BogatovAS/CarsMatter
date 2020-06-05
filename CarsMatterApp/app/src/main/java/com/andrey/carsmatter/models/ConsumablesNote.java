@@ -18,6 +18,10 @@ public class ConsumablesNote {
     @Expose
     public KindOfService KindOfService;
 
+    @SerializedName("kindOfServiceId")
+    @Expose
+    public String KindOfServiceId;
+
     @SerializedName("price")
     @Expose
     public float Price;

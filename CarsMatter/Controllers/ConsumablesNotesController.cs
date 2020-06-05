@@ -42,7 +42,7 @@
                 MyCar selectedCar = await this.userService.GetSelectedCar(userId);
 
                 List<ConsumablesNote> consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, selectedCar.Id);
-                return Ok(consumablesNotes);
+                return Ok(consumablesNotes.OrderByDescending(note => note.Date));
             }
             catch (Exception e)
             {
@@ -67,7 +67,7 @@
         }
 
         [HttpGet("report")]
-        public async Task<ActionResult<Dictionary<string, ConsumablesNotesReport>>> GetReport([FromQuery] string userCarId = null)
+        public async Task<ActionResult<ConsumablesNotesReport>> GetReport([FromQuery] string userCarId = null)
         {
             try
             {
@@ -86,29 +86,20 @@
 
                 consumablesNotes = consumablesNotes.OrderBy(note => note.Date).ToList();
 
-                Dictionary<string, ConsumablesNotesReport> reportsPerKind = new Dictionary<string, ConsumablesNotesReport>();
-
-                var grpupedConsumablesNotes = consumablesNotes.GroupBy(n => n.KindOfServiceId);
-
                 int totalDays = (consumablesNotes.Last().Date - consumablesNotes.First().Date).Days;
 
                 int totalKms = consumablesNotes.Last().Odo - consumablesNotes.First().Odo;
 
-                foreach (IGrouping<string, ConsumablesNote> group in grpupedConsumablesNotes)
+                float totalCost = consumablesNotes.Sum(n => n.Price);
+
+                ConsumablesNotesReport report = new ConsumablesNotesReport
                 {
-                    float totalCost = group.Sum(n => n.Price);
-
-                    ConsumablesNotesReport report = new ConsumablesNotesReport
-                    {
-                        TotalCost = totalCost,
-                        CostPerDay = totalCost / totalDays,
-                        CostPerKm = totalCost / totalKms
-                    };
-
-                    reportsPerKind.Add(group.Key, report);
-                }
+                    TotalCost = totalCost,
+                    CostPerDay = totalCost / totalDays,
+                    CostPerKm = totalCost / totalKms
+                };
                 
-                return Ok(reportsPerKind);
+                return Ok(report);
             }
             catch (Exception e)
             {
@@ -127,6 +118,14 @@
                 MyCar selectedCar = await this.userService.GetSelectedCar(userId);
 
                 consumablesNote.MyCarId = selectedCar.Id;
+
+                var allNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, selectedCar.Id);
+                allNotes = allNotes.OrderByDescending(note => note.Date).ToList();
+
+                if(allNotes.Any() && allNotes.First().Odo > consumablesNote.Odo && allNotes.First().Date < consumablesNote.Date)
+                {
+                    return this.BadRequest("Текущий пробег не может быть меньше пробега в предыдущей записи");
+                }
 
                 await this.consumablesNotesRepository.AddConsumablesNote(consumablesNote);
                 return Ok(true);
@@ -148,6 +147,24 @@
                 MyCar selectedCar = await this.userService.GetSelectedCar(userId);
 
                 consumablesNote.MyCarId = selectedCar.Id;
+
+                var allNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, selectedCar.Id);
+                allNotes = allNotes.OrderByDescending(note => note.Date).ToList();
+
+                if (allNotes.Any() && consumablesNote.Date > allNotes.First().Date)
+                {
+                    if (consumablesNote.Odo < allNotes.First().Odo)
+                    {
+                        return this.BadRequest("Текущий пробег не может быть меньше пробега в последней записи");
+                    }
+                }
+                if (allNotes.Any() && consumablesNote.Odo > allNotes.First().Odo)
+                {
+                    if (consumablesNote.Date < allNotes.First().Date)
+                    {
+                        return this.BadRequest("Дата текущей замены не может быть меньше даты в последней записи");
+                    }
+                }
 
                 await this.consumablesNotesRepository.UpdateConsumablesNote(consumablesNote);
                 return Ok(true);

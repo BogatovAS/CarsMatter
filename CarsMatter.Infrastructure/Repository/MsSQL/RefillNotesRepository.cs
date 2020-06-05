@@ -45,8 +45,21 @@
 
         public async Task UpdateRefillNote(RefillNote refillNote)
         {
-            this.dbContext.RefillNotes.Update(refillNote);
-            await this.SaveChanges();
+            var existingNote = this.dbContext.RefillNotes.FirstOrDefault(note => note.Id == refillNote.Id);
+
+            if (existingNote != null)
+            {
+                existingNote.Date = refillNote.Date;
+                existingNote.Location = refillNote.Location;
+                existingNote.MyCarId = refillNote.MyCarId;
+                existingNote.Odo = refillNote.Odo;
+                existingNote.Price = refillNote.Price;
+                existingNote.Petrol = refillNote.Petrol;
+
+                this.dbContext.RefillNotes.Update(existingNote);
+
+                await this.SaveChanges();
+            }
         }
 
         public async Task DeleteRefillNote(string refillNoteId)

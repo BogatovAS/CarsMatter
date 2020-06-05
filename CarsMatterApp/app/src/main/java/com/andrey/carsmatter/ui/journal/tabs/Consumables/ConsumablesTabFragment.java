@@ -99,24 +99,21 @@ public class ConsumablesTabFragment extends Fragment {
             }
         });
 
-        consumablesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ConsumablesNote selectedNote = adapter.getItem(i);
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        consumablesListView.setOnItemClickListener((adapterView, view12, i, l) -> {
+            ConsumablesNote selectedNote = adapter.getItem(i);
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-                Bundle params = new Bundle();
-                params.putString("id", selectedNote.Id);
-                params.putString("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(selectedNote.Date));
-                params.putString("location", selectedNote.Location);
-                params.putString("service", selectedNote.KindOfService.Id);
-                params.putInt("odo", selectedNote.Odo);
-                params.putFloat("price", selectedNote.Price);
-                params.putString("notes", selectedNote.Notes);
+            Bundle params = new Bundle();
+            params.putString("id", selectedNote.Id);
+            params.putString("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(selectedNote.Date));
+            params.putString("location", selectedNote.Location);
+            params.putString("service", selectedNote.KindOfServiceId);
+            params.putInt("odo", selectedNote.Odo);
+            params.putFloat("price", selectedNote.Price);
+            params.putString("notes", selectedNote.Notes);
 
-                navController.navigate(R.id.nav_consumables_change, params);
-                adapter.notifyDataSetChanged();
-            }
+            navController.navigate(R.id.nav_consumables_change, params);
+            adapter.notifyDataSetChanged();
         });
 
         consumablesListView.setAdapter(adapter);

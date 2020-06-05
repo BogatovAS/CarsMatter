@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -40,14 +42,13 @@ public class LoginFragment extends Fragment {
     private int counter;
     private View view;
 
-    private Handler handler;
-    private Handler signUpHandler;
-
     private EditText username;
     private EditText password;
     private CheckBox rememberMeCheckbox;
 
     private String filePath;
+
+    DrawerLayout drawer;
 
 
     @Override
@@ -55,74 +56,15 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.carsRepository = new CarsRepository(getContext());
         this.filePath = getContext().getFilesDir().getAbsolutePath() + File.separator + "creds.json";
-
-        this.handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                boolean isUserCorrect = msg.getData().getBoolean("isUserCorrect");
-
-                if (!isUserCorrect) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            counter--;
-                            Toast.makeText(getContext(), "Неверные имя пользователя или пароль. Попыток осталось: " + counter, Toast.LENGTH_SHORT).show();
-                            if (counter == 0) {
-                                view.findViewById(R.id.login_button).setEnabled(false);
-                                final Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        view.findViewById(R.id.login_button).setEnabled(true);
-                                        counter = 3;
-                                    }
-                                }, 10000);
-                            }
-                        }
-                    });
-                } else {
-                    if(rememberMeCheckbox.isChecked()) {
-                        RememberAccount();
-                    }
-                    else{
-                        DeleteRememberedAccount();
-                    }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                            navController.navigate(R.id.nav_journal);
-                        }
-                    });
-                }
-            }
-        };
-
-        this.signUpHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                final String signUpResult = msg.getData().getString("signUpResult");
-
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Boolean.parseBoolean(signUpResult)) {
-                            Toast.makeText(getContext(), "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), signUpResult, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        };
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_login, container, false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
+        drawer = getActivity().findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         this.username = view.findViewById(R.id.username);
         this.password = view.findViewById(R.id.password);
@@ -141,21 +83,46 @@ public class LoginFragment extends Fragment {
         view.findViewById(R.id.login_button).setOnClickListener(v -> new Thread(null, () -> {
             boolean correctUser = carsRepository.Login(username.getText().toString(), password.getText().toString());
 
-            Bundle args = new Bundle();
-            args.putBoolean("isUserCorrect", correctUser);
-            Message message = new Message();
-            message.setData(args);
-            handler.handleMessage(message);
+            if (!correctUser) {
+                getActivity().runOnUiThread(() -> {
+                    counter--;
+                    Toast.makeText(getContext(), "Неверные имя пользователя или пароль. Попыток осталось: " + counter, Toast.LENGTH_SHORT).show();
+                    if (counter == 0) {
+                        view.findViewById(R.id.login_button).setEnabled(false);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(() -> {
+                            view.findViewById(R.id.login_button).setEnabled(true);
+                            counter = 3;
+                        }, 10000);
+                    }
+                });
+            } else {
+                if(rememberMeCheckbox.isChecked()) {
+                    RememberAccount();
+                }
+                else{
+                    DeleteRememberedAccount();
+                }
+                getActivity().runOnUiThread(() -> {
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.navigate(R.id.nav_journal);
+                });
+            }
+
         }).start());
 
         view.findViewById(R.id.create_an_account).setOnClickListener(view -> new Thread(null, () -> {
-            String result = carsRepository.SignUp(username.getText().toString(), password.getText().toString());
+            String signUpResult = carsRepository.SignUp(username.getText().toString(), password.getText().toString());
 
-            Bundle args = new Bundle();
-            args.putString("signUpResult", result);
-            Message message = new Message();
-            message.setData(args);
-            signUpHandler.handleMessage(message);
+            getActivity().runOnUiThread(() -> {
+                if (Boolean.parseBoolean(signUpResult)) {
+                    Toast.makeText(getContext(), "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), signUpResult, Toast.LENGTH_SHORT).show();
+                }
+            });
         }).start());
 
         return view;
