@@ -43,6 +43,7 @@
             }
             catch(Exception e)
             {
+                this.logger.LogError(e, e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -147,9 +148,9 @@
 
                 userCar.UserId = userId;
 
-                MyCar selectedCar = await userService.AddCar(userCar);
+                MyCar createdCar = await userService.AddCar(userCar);
 
-                return this.Ok(selectedCar);
+                return this.Ok(createdCar);
             }
             catch (Exception e)
             {
@@ -171,6 +172,25 @@
                 MyCar selectedCar = await userService.UpdateCar(userCar);
 
                 return this.Ok(selectedCar);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("car/{userCarId}")]
+        public async Task<ActionResult<MyCar>> DeleteUserCar([FromRoute] string userCarId)
+        {
+            try
+            {
+                string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+                bool result = await userService.DeleteCar(userId, userCarId);
+
+                return this.Ok(result);
             }
             catch (Exception e)
             {

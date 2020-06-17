@@ -1,7 +1,10 @@
 package com.andrey.carsmatter.http;
 
+import android.graphics.Bitmap;
+
 import com.andrey.carsmatter.models.User;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Credentials;
@@ -43,6 +46,25 @@ public class HttpClient {
                 .url(url)
                 .addHeader("Authorization", AuthorizationHeaderValue)
                 .post(RequestBody.create(mediaType, requestJson))
+                .build();
+        Response response;
+        try {
+            response = httpClient.newCall(request).execute();
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String postFile(String url, byte[] file) {
+        this.AuthorizationHeaderValue = Credentials.basic((User.getCurrentUser().Username), User.getCurrentUser().Password);
+        final MediaType mediaType = MediaType.parse("image/jpeg");
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", AuthorizationHeaderValue)
+                .post(RequestBody.create(mediaType, file ))
                 .build();
         Response response;
         try {

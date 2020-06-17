@@ -82,21 +82,23 @@
         }
 
         [HttpGet("report")]
-        public async Task<ActionResult<RefillNotesReport>> GetReport([FromQuery] string userCarId = null)
+        public async Task<ActionResult<RefillNotesReport>> GetReport()
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
                 List<RefillNote> refillNotes;
 
-                if (userCarId == null)
+                if (selectedCar == null)
                 {
                     refillNotes = await this.refillNotesRepository.GetAllRefillNotes(userId);
                 }
                 else
                 {
-                    refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, userCarId);
+                    refillNotes = await this.refillNotesRepository.GetRefillNotesForUserCar(userId, selectedCar.Id);
                 }
 
                 refillNotes = refillNotes.OrderBy(note => note.Date).ToList();

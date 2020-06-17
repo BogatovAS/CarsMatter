@@ -81,6 +81,11 @@ public class LoginFragment extends Fragment {
         counter = 3;
 
         view.findViewById(R.id.login_button).setOnClickListener(v -> new Thread(null, () -> {
+            if(username.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                Toast.makeText(getContext(),"Поля 'Имя пользователя' и 'Пароль' должны быть заполнены", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             boolean correctUser = carsRepository.Login(username.getText().toString(), password.getText().toString());
 
             if (!correctUser) {
@@ -107,7 +112,13 @@ public class LoginFragment extends Fragment {
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                    navController.navigate(R.id.nav_journal);
+                    if(User.getCurrentUser().SelectedCar == null){
+                        navController.navigate(R.id.nav_usercars_change);
+                        Toast.makeText(getContext(), "Добавьте свою первую машину", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        navController.navigate(R.id.nav_journal);
+                    }
                 });
             }
 

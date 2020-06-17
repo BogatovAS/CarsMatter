@@ -49,6 +49,18 @@ public class CarsRepository {
         this.httpHandler = new HttpClient();
     }
 
+    public CarsRepository(Context context, HttpClient httpClient) {
+        this.context = context;
+        try {
+            this.activity = (Activity) context;
+        }
+        catch (Exception e) {
+
+        }
+        this.apiUrl = "asd";
+        this.httpHandler = httpClient;
+    }
+
     public ArrayList<RefillNote> GetAllRefillNotes() {
         String url = this.apiUrl + "/refill_notes";
 
@@ -124,7 +136,7 @@ public class CarsRepository {
 
         String responseString = this.httpHandler.getHttpResponse(url);
 
-        MyCar selectedCar = new MyCar();
+        MyCar selectedCar = null;
 
         if (responseString != null && !responseString.isEmpty()) {
             selectedCar = this.gson.fromJson(responseString, MyCar.class);
@@ -140,6 +152,28 @@ public class CarsRepository {
 
         return this.gson.fromJson(responseString, new TypeToken<ArrayList<MyCar>>() {
         }.getType());
+    }
+
+    public Car SendCarForRecognition(byte[] imageBytes) {
+        String url = this.apiUrl + "cars/recognize";
+
+        String responseString = this.httpHandler.postFile(url, imageBytes);
+
+        return this.gson.fromJson(responseString, Car.class);
+    }
+
+    public boolean DeleteMyCar(MyCar myCar){
+        String url = this.apiUrl + "/user/car/" + myCar.Id;
+
+        String responseString = this.httpHandler.deleteHttpRequest(url);
+
+        boolean result = Boolean.parseBoolean(responseString);
+
+        if (!result) {
+            this.ShowToast(responseString);
+        }
+
+        return Boolean.parseBoolean(responseString);
     }
 
     public ArrayList<KindOfService> GetKindOfServices() {
@@ -335,14 +369,14 @@ public class CarsRepository {
         String url = this.apiUrl + "/user/logIn";
 
         UserModel user = new UserModel();
-        user.Username = User.getCurrentUser().Username;
-        user.Password = User.getCurrentUser().Password;
+        user.Username = username;
+        user.Password = password;
 
         String responseString = this.httpHandler.loginRequest(url, this.gson.toJson(user));
 
         if (Boolean.parseBoolean(responseString)) {
-            MyCar selectedCar = GetSelectedUserCar();
-            User.setCurrentUser(username, password, selectedCar);
+            User.setCurrentUser(username, password, null);
+            User.getCurrentUser().SelectedCar = GetSelectedUserCar();
         }
 
         return Boolean.parseBoolean(responseString);

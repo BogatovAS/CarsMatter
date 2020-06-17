@@ -8,8 +8,12 @@
     using System.Collections.Generic;
     using System;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json.Linq;
+    using System.IO;
     using System.Linq;
+    using System.Diagnostics;
+    using Microsoft.AspNetCore.Hosting;
+    using IronPython.Hosting;
+    using Microsoft.Scripting.Hosting;
 
     [Route("api/cars")]
     [ApiController, Produces("application/json")]
@@ -20,6 +24,8 @@
         private readonly ICarsRepository<Car> carsRepository;
 
         private readonly ILogger<CarsController> logger;
+
+        IHostingEnvironment hostingEnvironment;
 
         public CarsController(
             IBrandsRepository<Brand> brandsRepository,
@@ -133,7 +139,7 @@
             {
                 List<Car> modelCars = await this.carsRepository.GetAllCars(brandModelId);
 
-                foreach (var car in modelCars) 
+                foreach (var car in modelCars)
                 {
                     car.Base64CarImage = await this.carsRepository.GetImageForModel(car.CarImagePath);
                 }
@@ -147,27 +153,33 @@
             }
         }
 
-        [HttpPost("brand/models/cars/recognize")]
-        public async Task<ActionResult<Car>> RecognizeCar([FromBody] string base64CarImage)
-        {
-            string recognitionUrl = "https://automl.googleapis.com/v1beta1/projects/651771669084/locations/us-central1/models/ICN2461371127985864704:predict";
-            string header = "Bearer ";
+        //[HttpPost("recognize"), Consumes("multipart/form-data")]
+        //public async Task<ActionResult<Car>> RecognizeCar([FromForm] IFormFile file)
+        //{
+        //    string filePath = Path.Combine(hostingEnvironment.WebRootPath, "car.jpeg");
+        //    using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(fileStream);
+        //    }
 
-            JObject body = new JObject
-            {
-                {
-                    "payload", new JObject {
-                        {
-                            "image", new JObject {
-                                {
-                                    "imageBytes", base64CarImage
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-            return new Car();
-        }
+        //    string scriptPath = Path.Combine(hostingEnvironment.WebRootPath, "demo.py");
+
+        //    var engine = Python.CreateEngine(); // Extract Python language engine from their grasp
+        //    var scope = engine.CreateScope(); // Introduce Python namespace (scope)
+
+        //    List<string> pathes = engine.GetSearchPaths().ToList();
+        //    pathes.AddRange(new[]
+        //    {
+        //       Path.Combine(hostingEnvironment.WebRootPath, "modules")
+        //    });
+
+        //    engine.SetSearchPaths(pathes);
+
+        //    engine.ExecuteFile(scriptPath);
+
+        //    var result = scope.GetVariable("results");
+
+        //    return new Car();
+        //}
     }
 }

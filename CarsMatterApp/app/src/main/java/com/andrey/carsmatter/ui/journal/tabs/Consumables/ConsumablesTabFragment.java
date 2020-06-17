@@ -76,24 +76,19 @@ public class ConsumablesTabFragment extends Fragment {
                 final ConsumablesNote selectedNote = adapter.getItem(i);
 
                 dialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final boolean successfully = carsRepository.DeleteConsumablesNote(selectedNote.Id);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(successfully){
-                                    adapter.remove(selectedNote);
-                                    adapter.notifyDataSetChanged();
-                                    Toast.makeText(getActivity().getApplicationContext(),"Запись была успешно удалена", Toast.LENGTH_LONG).show();
-                                }
-                                else{
-                                    Toast.makeText(getActivity().getApplicationContext(),"Произошла ошибка во время удаления записи", Toast.LENGTH_LONG).show();
-                                }
-                                dialog.dismiss();
-                            }});
-                    }
+                new Thread(() -> {
+                    final boolean successfully = carsRepository.DeleteConsumablesNote(selectedNote.Id);
+                    getActivity().runOnUiThread(() -> {
+                        if(successfully){
+                            adapter.remove(selectedNote);
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(),"Запись была успешно удалена", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(getActivity().getApplicationContext(),"Произошла ошибка во время удаления записи", Toast.LENGTH_LONG).show();
+                        }
+                        dialog.dismiss();
+                    });
                 }).start();
                 return true;
             }

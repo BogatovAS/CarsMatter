@@ -99,6 +99,7 @@ namespace CarsMatter.Infrastructure.Repository
                 existingCar.CarName = car.CarName;
                 existingCar.BodyType = car.BodyType;
                 existingCar.AvitoUri = car.AvitoUri;
+                existingCar.YoulaUri = car.YoulaUri;
                 existingCar.CarImagePath = car.CarImagePath;
 
                 this.dbContext.Cars.Update(existingCar);

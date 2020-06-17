@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CarsMatter.Infrastructure.Db.CarsMatterDbContext">
+    <Position X="2.75" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAACQCAAAAAAAAAAACAAAAEAgAgAAAAAAAAAABAAE=</HashCode>
+      <FileName>Db\CarsMatterDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Helpers.CarsHtmlParser">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAQAAAAAAAAAAAAAAAEAAAAAAgAAAAAAAABAAIAA=</HashCode>
+      <FileName>Helpers\CarsHtmlParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Services.CarsService">
+    <Position X="2.25" Y="9.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAgEAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Services\CarsService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Services.UserService">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.25" Y="4.5" />
+        <Point X="1.25" Y="4" />
+        <Point X="2.75" Y="4" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gAAAAAIAAQAAAAAKAQAIAAIAAAEEAFAAAUAAAAAAAAA=</HashCode>
+      <FileName>Services\UserService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.BrandModelsRepository" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="6.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.997" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gAAAAAAkAAAAAAACAQAAAAAAAAAAAIAAAAAAIAAAAAA=</HashCode>
+      <FileName>Repository\MsSQL\BrandModelsRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.BrandsRepository" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gIAAAAAAAAAAAAACAQAAAAAAAAAAAAQAAAAAACAAAQA=</HashCode>
+      <FileName>Repository\MsSQL\BrandsRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.CarsRepository" BaseTypeListCollapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.312" Y="3.69" />
+        <Point X="5.312" Y="4.38" />
+        <Point X="4.25" Y="4.38" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAEQAAAFACAQAAAAAAAABAEAgAAEAAAAAAAAA=</HashCode>
+      <FileName>Repository\MsSQL\CarsRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.ConsumablesNotesRepository" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="1" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.188" Y="2.363" />
+        <Point X="2.188" Y="3.562" />
+        <Point X="2.75" Y="3.562" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gABAAAAAAAABAEACAQQAAAAAAAAAAAAAAAAgAAABAAA=</HashCode>
+      <FileName>Repository\MsSQL\ConsumablesNotesRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.FavoriteCarsRepository" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="7.181" />
+        <Point X="3" Y="7.181" />
+        <Point X="3" Y="5.838" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gEIAAAAAAAAAAAACAQAAAAAAAAEAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Repository\MsSQL\FavoritesCarsRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Repository.RefillNotesRepository" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="7" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="dbContext" Type="CarsMatter.Infrastructure.Db.CarsMatterDbContext" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.594" Y="7" />
+        <Point X="6.594" Y="5.132" />
+        <Point X="4.25" Y="5.132" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gAIBAAAAAAAAAAASAQAAAABAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Repository\MsSQL\RefillNotesRepository.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.Brand">
+    <Position X="7" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAQAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\MsSQL\Brand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.BrandModel">
+    <Position X="7" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAgRAAA=</HashCode>
+      <FileName>Models\MsSQL\BrandModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Brand" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.Car">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="BrandModel" Type="CarsMatter.Infrastructure.Models.MsSQL.BrandModel">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.018" Y="0.096" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgACAEAAAAABAAAgAARkAIAAIAAAAgAAAAgAAAAEAAA=</HashCode>
+      <FileName>Models\MsSQL\Car.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BrandModel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.ConsumablesNote">
+    <Position X="16.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAiAAAAAQAAAAAAAAoAAAAAAAAAgQABAAAAAAAACAA=</HashCode>
+      <FileName>Models\MsSQL\ConsumablesNote.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MyCar" />
+      <Property Name="KindOfService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.ConsumablesNotesReport">
+    <Position X="13.5" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAgAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\MsSQL\ConsumablesNotesReport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.KindOfService">
+    <Position X="16.25" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\MsSQL\KindOfService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.MyCar">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAADAAAABAAAAAAAAAACAAwAAAgAAAAAAAgAAAABAAA=</HashCode>
+      <FileName>Models\MsSQL\MyCar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.RefillNote">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMACAAAAAQAAAAAAAAIAAAAAAAAAgAABAAAAAAAACAA=</HashCode>
+      <FileName>Models\MsSQL\RefillNote.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MyCar" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.RefillNotesReport">
+    <Position X="16" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAABAAAAAACAAAAAgAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\MsSQL\RefillNotesReport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.User">
+    <Position X="11.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>FACCAAAAAAAAAAAAAQAAAAAAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Models\MsSQL\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="MyCars" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.MsSQL.UserCar">
+    <Position X="11.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAQAAAAAAAAAAAiAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\MsSQL\UserCar.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Car" />
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Jobs.UpdateAllCarsJob">
+    <Position X="4.5" Y="8.75" Width="1.5" />
+    <AssociationLine Name="brandModelsRepository" Type="CarsMatter.Infrastructure.Interfaces.IBrandModelsRepository&lt;T&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="9.625" />
+        <Point X="4.188" Y="9.625" />
+        <Point X="4.188" Y="10.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.306" Y="0.446" Height="0.182" Width="1.68" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="brandsRepository" Type="CarsMatter.Infrastructure.Interfaces.IBrandsRepository&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.389" Y="0.237" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="carsRepository" Type="CarsMatter.Infrastructure.Interfaces.ICarsRepository&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.877" Y="0.413" Height="0.182" Width="1.306" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="carsService" Type="CarsMatter.Infrastructure.Interfaces.ICarsService">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.16" Y="0.289" Height="0.182" Width="1.129" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAgAQAAAAAM=</HashCode>
+      <FileName>Jobs\UpdateAllCarsJob.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="brandModelsRepository" />
+      <Field Name="brandsRepository" />
+      <Field Name="carsRepository" />
+      <Field Name="carsService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Models.UserRequestModel">
+    <Position X="10.5" Y="8.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UserRequestModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CarsMatter.Infrastructure.Authentication.BasicAuthenticationHandler">
+    <Position X="8.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Authentication\BasicAuthenticationHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userService" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="CarsMatter.Infrastructure.Interfaces.IUserService" Collapsed="true">
+    <Position X="8.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAKAAAAAAIAAAEEAFAAAUAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IUserService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CarsMatter.Infrastructure.Interfaces.IBrandModelsRepository&lt;T&gt;" Collapsed="true">
+    <Position X="4" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAkAAAAAAAAAAAAAAAAAAAAAIAAAAAAIAAAAAA=</HashCode>
+      <FileName>Interfaces\IBrandModelsRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CarsMatter.Infrastructure.Interfaces.IBrandsRepository&lt;T&gt;" Collapsed="true">
+    <Position X="5.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAACAAAQA=</HashCode>
+      <FileName>Interfaces\IBrandsRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CarsMatter.Infrastructure.Interfaces.ICarsRepository&lt;T&gt;" Collapsed="true">
+    <Position X="6.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAEACAAAAAAAAAAAAEAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ICarsRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CarsMatter.Infrastructure.Interfaces.ICarsService" Collapsed="true">
+    <Position X="2.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ICarsService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

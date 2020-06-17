@@ -42,16 +42,16 @@
         tools:layout="@layout/fragment_journal" />
 
     <fragment
-        android:id="@+id/nav_recognize"
-        android:name="com.andrey.carsmatter.ui.recognize.RecognizeFragment"
-        android:label="@string/menu_recognize"
-        tools:layout="@layout/fragment_recognize" />
-
-    <fragment
         android:id="@+id/nav_settings"
         android:name="com.andrey.carsmatter.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_recognize"
+        android:name="com.andrey.carsmatter.ui.recognize.RecognizeFragment"
+        android:label="@string/menu_recognize"
+        tools:layout="@layout/fragment_recognize" />
 
     <fragment
         android:id="@+id/nav_statistics"

@@ -43,8 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         RememberedAccount account = this.GetRememberedAccount();
 
         if(account != null){
-            User.setCurrentUser(account.Username, account.Password, null);
-            User.getCurrentUser().SelectedCar = carsRepository.GetSelectedUserCar();
+            new Thread(null, () -> carsRepository.Login(account.Username, account.Password)).start();
         }
         else{
             return;

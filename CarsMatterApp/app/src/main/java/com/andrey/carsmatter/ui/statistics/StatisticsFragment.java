@@ -47,7 +47,14 @@ public class StatisticsFragment extends Fragment {
 
         TextView selectedCarTexView = view.findViewById(R.id.statistics_selected_car_name);
 
-        selectedCarTexView.setText("Текущий автомобиль: ".toUpperCase() + User.getCurrentUser().SelectedCar.Name.toUpperCase());
+        if(User.getCurrentUser().SelectedCar != null) {
+            selectedCarTexView.setText("Текущий автомобиль: ".toUpperCase() + User.getCurrentUser().SelectedCar.Name.toUpperCase());
+            pager.setVisibility(View.VISIBLE);
+        }
+        else{
+            selectedCarTexView.setText("Выберите автомобиль в пункте 'Настройки'");
+            pager.setVisibility(View.INVISIBLE);
+        }
 
         return view;
     }

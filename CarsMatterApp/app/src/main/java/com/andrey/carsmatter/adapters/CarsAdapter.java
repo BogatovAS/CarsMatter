@@ -104,6 +104,11 @@ public class CarsAdapter extends BaseAdapter {
             }
         });
 
+        view.findViewById(R.id.car_youla_uri).setOnClickListener(view1 -> {
+            Uri uri = Uri.parse(cars.get(position).YoulaUri);
+            context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        });
+
         view.findViewById(R.id.car_add_to_favorite_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

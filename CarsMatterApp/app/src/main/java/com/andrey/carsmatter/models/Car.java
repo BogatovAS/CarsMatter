@@ -36,6 +36,10 @@ public class Car {
     @Expose
     public String AvitoUri;
 
+    @SerializedName("youlaUri")
+    @Expose
+    public String YoulaUri;
+
     @SerializedName("base64CarImage")
     @Expose
     public String Base64CarImage;

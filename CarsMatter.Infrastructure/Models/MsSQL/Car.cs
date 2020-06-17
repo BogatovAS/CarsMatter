@@ -28,6 +28,8 @@ namespace CarsMatter.Infrastructure.Models.MsSQL
         public string ManufactureEndDate { get; set; }
 
         public string AvitoUri { get; set; }
+
+        public string YoulaUri { get; set; }
         
         public string BodyType { get; set; }
 

@@ -82,7 +82,17 @@ namespace CarsMatter.Infrastructure.Helpers
 
                     List<string> dates = ParseManufactureDates(characteristicsElement[1].TextContent);
 
-                    string avitoQuery = $"{characteristicsElement[0].TextContent} {dates[0]}";
+                    string queryForAvito = $"{characteristicsElement[0].TextContent} {dates[0]}";
+                    string queryForYoula = $"{characteristicsElement[0].TextContent}";
+
+                    if(int.TryParse(dates[1], out int startDate))
+                    {
+                        queryForYoula += $"&yearMin={startDate}";
+                    }
+                    if(int.TryParse(dates[1], out int endDate))
+                    {
+                        queryForYoula += $"&yearMax={endDate}";
+                    }
 
                     Car model = new Car()
                     {
@@ -93,7 +103,8 @@ namespace CarsMatter.Infrastructure.Helpers
                         ManufactureStartDate = dates[0],
                         ManufactureEndDate = dates[1],
                         CarImagePath = carElement.QuerySelector<IHtmlImageElement>("img").Source.Remove(0, 8),
-                        AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={avitoQuery}",
+                        AvitoUri = $"https://avito.ru/rossiya/avtomobili?q={queryForAvito}",
+                        YoulaUri = $"https://auto.youla.ru/cars/used/?q={queryForYoula}",
                         BodyType = bodyTypeString,
                     };
 

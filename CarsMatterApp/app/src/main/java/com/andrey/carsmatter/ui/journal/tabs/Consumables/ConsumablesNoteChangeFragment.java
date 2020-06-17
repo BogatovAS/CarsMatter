@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -154,30 +155,35 @@ public class ConsumablesNoteChangeFragment extends Fragment {
                 currentConsumablesNote = new ConsumablesNote();
             }
 
-            currentConsumablesNote.Location = locationEditText.getText().toString();
-            currentConsumablesNote.Odo = Integer.parseInt(odoEditText.getText().toString());
-            currentConsumablesNote.Price = Float.parseFloat(servicePriceEditText.getText().toString());
-            currentConsumablesNote.Notes = notesEditText.getText().toString();
-            currentConsumablesNote.Date = calendar.getTime();
-            currentConsumablesNote.KindOfServiceId = kindsOfServices.get(serviceEditSelect.getSelectedItemPosition()).Id;
+            try {
+                currentConsumablesNote.Location = locationEditText.getText().toString();
+                currentConsumablesNote.Odo = Integer.parseInt(odoEditText.getText().toString());
+                currentConsumablesNote.Price = Float.parseFloat(servicePriceEditText.getText().toString());
+                currentConsumablesNote.Notes = notesEditText.getText().toString();
+                currentConsumablesNote.Date = calendar.getTime();
+                currentConsumablesNote.KindOfServiceId = kindsOfServices.get(serviceEditSelect.getSelectedItemPosition()).Id;
 
-            dialog.show();
-            new Thread(() -> {
-                if (isNewNote) {
-                    carsRepository.AddConsumablesNote(currentConsumablesNote);
-                } else {
-                    carsRepository.UpdateConsumablesNote(currentConsumablesNote);
-                }
-                getActivity().runOnUiThread(() -> {
-                    dialog.dismiss();
-                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                dialog.show();
+                new Thread(() -> {
+                    if (isNewNote) {
+                        carsRepository.AddConsumablesNote(currentConsumablesNote);
+                    } else {
+                        carsRepository.UpdateConsumablesNote(currentConsumablesNote);
+                    }
+                    getActivity().runOnUiThread(() -> {
+                        dialog.dismiss();
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-                    Bundle params = new Bundle();
-                    params.putInt("tabNumber", 2);
+                        Bundle params = new Bundle();
+                        params.putInt("tabNumber", 2);
 
-                    navController.navigate(R.id.nav_journal, params);
-                });
-            }).start();
+                        navController.navigate(R.id.nav_journal, params);
+                    });
+                }).start();
+            }
+            catch(Exception e){
+                Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
 
        dateView.setOnClickListener(view1 -> new DatePickerDialog(getContext(), (datePickerView, year, monthOfYear, dayOfMonth) -> {

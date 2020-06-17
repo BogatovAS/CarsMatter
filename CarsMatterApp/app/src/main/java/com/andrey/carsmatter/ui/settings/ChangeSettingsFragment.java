@@ -111,9 +111,12 @@ public class ChangeSettingsFragment extends Fragment {
         setSelectedButton.setOnClickListener(view1 -> {
             new Thread(null, () -> {
                 this.carsRepository.SetSelectedUserCar(this.currentCar.Id);
+
+                getActivity().runOnUiThread(() -> {
+                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                    navController.navigate(R.id.nav_settings);
+                });
             }).start();
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.nav_settings);
         });
         return view;
     }

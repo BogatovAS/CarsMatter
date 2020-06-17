@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,19 +61,17 @@ public class SettingsFragment extends Fragment {
 
             getActivity().runOnUiThread(() -> {
                 adapter.clear();
-                adapter.addAll(userCars.stream().map(car -> car.Name).collect(Collectors.toList()));
-                dialog.dismiss();
 
-                MyCar selectedCar = userCars.stream().filter(car -> car.Id.equals(User.getCurrentUser().SelectedCar.Id)).findFirst().orElse(null);
-
-                int position = userCars.indexOf(selectedCar);
-
-                if(position > -1) {
-                    View selectedItem = this.userCarsView.getAdapter().getView(position, null, this.userCarsView);
-
-                    selectedItem.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                    adapter.notifyDataSetChanged();
+                for(MyCar car: userCars){
+                    if(User.getCurrentUser().SelectedCar != null && car.Id.equals(User.getCurrentUser().SelectedCar.Id)){
+                        adapter.add(car.Name + " - ТЕКУЩИЙ АВТОМОБИЛЬ");
+                    }
+                    else {
+                        adapter.add(car.Name);
+                    }
                 }
+
+                dialog.dismiss();
             });
         }).start();
     }
@@ -106,8 +105,25 @@ public class SettingsFragment extends Fragment {
             navController.navigate(R.id.nav_usercars_change, params);
         });
 
-        userCarsView.setOnItemLongClickListener((adapterView, view12, i, l) -> {
-            new Thread(null, () -> this.carsRepository.SetSelectedUserCar(this.userCars.get(i).Id)).start();
+        this.userCarsView.setOnItemLongClickListener((adapterView, view12, i, l) -> {
+            dialog.show();
+
+            String selectedItem = this.adapter.getItem(i);
+            new Thread(() -> {
+                boolean successfully = this.carsRepository.DeleteMyCar(this.userCars.get(i));
+                getActivity().runOnUiThread(() -> {
+                    if(successfully){
+                        adapter.remove(selectedItem);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity().getApplicationContext(),"Автомобиль был успешно удален", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(getActivity().getApplicationContext(),"Произошла ошибка во время удаления автомобиля", Toast.LENGTH_LONG).show();
+                    }
+                    dialog.dismiss();
+                });
+            }).start();
+
             return true;
         });
 

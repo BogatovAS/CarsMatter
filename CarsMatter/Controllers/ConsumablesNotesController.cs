@@ -67,21 +67,23 @@
         }
 
         [HttpGet("report")]
-        public async Task<ActionResult<ConsumablesNotesReport>> GetReport([FromQuery] string userCarId = null)
+        public async Task<ActionResult<ConsumablesNotesReport>> GetReport()
         {
             try
             {
                 string userId = this.Request.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
+                MyCar selectedCar = await this.userService.GetSelectedCar(userId);
+
                 List<ConsumablesNote> consumablesNotes;
 
-                if (userCarId == null)
+                if (selectedCar == null)
                 {
                     consumablesNotes = await this.consumablesNotesRepository.GetAllConsumablesNotes(userId);
                 }
                 else 
                 {
-                    consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, userCarId);
+                    consumablesNotes = await this.consumablesNotesRepository.GetConsumablesNotesForUserCar(userId, selectedCar.Id);
                 }
 
                 consumablesNotes = consumablesNotes.OrderBy(note => note.Date).ToList();

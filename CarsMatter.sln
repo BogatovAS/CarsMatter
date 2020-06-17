@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsMatter", "CarsMatter\CarsMatter.csproj", "{1857218C-CA98-44AC-A677-63AFE6264C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarsMatter", "CarsMatter\CarsMatter.csproj", "{1857218C-CA98-44AC-A677-63AFE6264C39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsMatter.Infrastructure", "CarsMatter.Infrastructure\CarsMatter.Infrastructure.csproj", "{F5C20229-C5A3-4677-897A-5AF6F64E6027}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarsMatter.Infrastructure", "CarsMatter.Infrastructure\CarsMatter.Infrastructure.csproj", "{F5C20229-C5A3-4677-897A-5AF6F64E6027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cars.Matter.CarsRecognition", "Cars.Matter.CarsRecognition\Cars.Matter.CarsRecognition.csproj", "{00CBAF83-49C6-46D4-8724-95F7C359362D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsMatter.Tests", "CarsMatter.Tests\CarsMatter.Tests.csproj", "{DB637ACD-DF4B-444B-8343-64BC87384E60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5C20229-C5A3-4677-897A-5AF6F64E6027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00CBAF83-49C6-46D4-8724-95F7C359362D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CBAF83-49C6-46D4-8724-95F7C359362D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CBAF83-49C6-46D4-8724-95F7C359362D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CBAF83-49C6-46D4-8724-95F7C359362D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB637ACD-DF4B-444B-8343-64BC87384E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB637ACD-DF4B-444B-8343-64BC87384E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB637ACD-DF4B-444B-8343-64BC87384E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB637ACD-DF4B-444B-8343-64BC87384E60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

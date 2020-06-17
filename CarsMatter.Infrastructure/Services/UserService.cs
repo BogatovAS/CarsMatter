@@ -50,6 +50,29 @@ namespace CarsMatter.Infrastructure.Services
             return car;
         }
 
+        public async Task<bool> DeleteCar(string userId, string userCarId)
+        {
+            var user = this.dbContext.Users.Include(u => u.MyCars).FirstOrDefault(u => u.Id == userId);
+
+            var userCar = user.MyCars.FirstOrDefault(car => car.Id == userCarId);
+
+            if (userCar != null) {
+                if (userCarId == user.MySelectedCarId)
+                {
+                    user.MySelectedCarId = null;
+                }
+
+                this.dbContext.MyCars.Remove(userCar);
+                this.dbContext.Users.Update(user);
+
+                await this.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<MyCar> GetSelectedCar(string userId)
         {
             return await Task.Run(() =>

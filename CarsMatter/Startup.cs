@@ -71,6 +71,7 @@ namespace CarsMatter
             services.AddTransient<IRefillNotesRepository<RefillNote>, RefillNotesRepository>();
             services.AddTransient<IConsumablesNotesRepository<ConsumablesNote>, ConsumablesNotesRepository>();
 
+            services.AddApplicationInsightsTelemetry();
             services.AddMemoryCache();
             services.AddCors();
 
@@ -111,7 +112,7 @@ namespace CarsMatter
             app.UseAuthentication();
 
             app.UseHangfireDashboard();
-            RecurringJob.AddOrUpdate<UpdateAllCarsJob>("updateAllCarsJob", job => job.Run(), Cron.Daily(21));
+            RecurringJob.AddOrUpdate<UpdateAllCarsJob>("updateAllCarsJob", job => job.Run(), Cron.Monthly(1));
 
             app.UseMvc();
         }

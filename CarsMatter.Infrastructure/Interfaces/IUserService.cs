@@ -20,6 +20,8 @@ namespace CarsMatter.Infrastructure.Interfaces
 
         Task<MyCar> UpdateCar(MyCar car);
 
+        Task<bool> DeleteCar(string userId, string userCarId);
+
         Task<User> Create(User user, string password);
 
         Task Delete(string id);

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -94,15 +95,14 @@ public class RefillNoteChangeFragment extends Fragment {
         }
         Button applyRefillChangeButton = view.findViewById(R.id.apply_refill_change_button);
 
-        applyRefillChangeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final boolean isNewNote = currentRefillNote == null;
+        applyRefillChangeButton.setOnClickListener(view15 -> {
+            final boolean isNewNote = currentRefillNote == null;
 
-                if(isNewNote){
-                    currentRefillNote = new RefillNote();
-                }
+            if(isNewNote){
+                currentRefillNote = new RefillNote();
+            }
 
+            try {
                 currentRefillNote.Location = locationEditText.getText().toString();
                 currentRefillNote.Petrol = Float.parseFloat(petrolEditText.getText().toString());
                 currentRefillNote.Odo = Integer.parseInt(odoEditText.getText().toString());
@@ -110,77 +110,54 @@ public class RefillNoteChangeFragment extends Fragment {
                 currentRefillNote.Date = calendar.getTime();
 
                 dialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isNewNote) {
-                            carsRepository.AddRefillNote(currentRefillNote);
-                        } else {
-                            carsRepository.UpdateRefillNote(currentRefillNote);
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                                navController.navigate(R.id.nav_journal);
-                            }});
+                new Thread(() -> {
+                    if (isNewNote) {
+                        carsRepository.AddRefillNote(currentRefillNote);
+                    } else {
+                        carsRepository.UpdateRefillNote(currentRefillNote);
                     }
+                    getActivity().runOnUiThread(() -> {
+                        dialog.dismiss();
+                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                        navController.navigate(R.id.nav_journal);
+                    });
                 }).start();
-
+            }
+            catch(Exception e){
+                Toast.makeText(getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
-        dateView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker datePickerView, int year, int monthOfYear, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
-                    }
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-                .show();
-            }
+        dateView.setOnClickListener(view1 -> new DatePickerDialog(getContext(), (datePickerView, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            dateView.setText(new SimpleDateFormat("dd MMMM yyyy").format(calendar.getTime()));
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH))
+        .show());
+
+        timeView.setOnClickListener(view12 -> new TimePickerDialog(getContext(), (timePickerView, hourOfDay, minute) -> {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
+        },
+        calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE), true)
+        .show());
+
+        refillPriceSummary.setOnClickListener(view14 -> {
+            float summaryPrice = Float.parseFloat(refillPriceSummary.getText().toString());
+            float currentPetrol = Float.parseFloat(petrolEditText.getText().toString());
+            refillPricePerLiter.setText(Float.toString( summaryPrice / currentPetrol));
         });
 
-        timeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    public void onTimeSet(TimePicker timePickerView, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        timeView.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
-                    }
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE), true)
-                .show();
-            }
-        });
-
-        refillPriceSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                float summaryPrice = Float.parseFloat(refillPriceSummary.getText().toString());
-                float currentPetrol = Float.parseFloat(petrolEditText.getText().toString());
-                refillPricePerLiter.setText(Float.toString( summaryPrice / currentPetrol));
-            }
-        });
-
-        refillPricePerLiter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                float pricePerLiter = Float.parseFloat(refillPricePerLiter.getText().toString());
-                float currentPetrol = Float.parseFloat(petrolEditText.getText().toString());
-                refillPriceSummary.setText(Float.toString( pricePerLiter * currentPetrol));
-            }
+        refillPricePerLiter.setOnClickListener(view13 -> {
+            float pricePerLiter = Float.parseFloat(refillPricePerLiter.getText().toString());
+            float currentPetrol = Float.parseFloat(petrolEditText.getText().toString());
+            refillPriceSummary.setText(Float.toString( pricePerLiter * currentPetrol));
         });
 
         return view;

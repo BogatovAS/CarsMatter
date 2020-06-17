@@ -29,11 +29,27 @@ namespace CarsMatter.Infrastructure.Db
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserCar>()
-                .HasKey(fc => new { fc.CarId, fc.UserId});
+                .HasKey(fc => new { fc.CarId, fc.UserId });
 
-            modelBuilder.Entity<ConsumablesNote>().HasOne(c => c.MyCar);
-            modelBuilder.Entity<ConsumablesNote>().HasOne(c => c.KindOfService);
-            modelBuilder.Entity<RefillNote>().HasOne(c => c.MyCar);
+            modelBuilder.Entity<ConsumablesNote>()
+                .HasOne(c => c.KindOfService);
+
+            modelBuilder.Entity<ConsumablesNote>()
+                .HasOne(n => n.MyCar);
+
+            modelBuilder.Entity<RefillNote>()
+                .HasOne(n => n.MyCar);
+
+            modelBuilder.Entity<MyCar>()
+                .HasMany(c => c.RefillNotes)
+                .WithOne(n => n.MyCar)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MyCar>()
+                .HasMany(c => c.ConsumablesNotes)
+                .WithOne(n => n.MyCar)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
